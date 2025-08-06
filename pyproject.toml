@@ -1,0 +1,115 @@
+[project]
+name = "pyamap"
+version = "0.0.1"
+description = "高德地图Python SDK"
+authors = [
+    {name = "KunxiSun",email = "sunkunxi@mongsion.com"}
+]
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.10,<4.0"
+dependencies = [
+    "aiohttp (>=3.12.15,<4.0.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[[tool.poetry.source]]
+name = "mongsion"
+url = "https://nexus.mongsion.com/repository/pypi/simple/"
+priority = "primary"
+
+
+[[tool.poetry.source]]
+name = "mongsion-hosted"
+url = "https://nexus.mongsion.com/repository/pypi-hosted/"
+
+
+[tool.poetry.dependencies]
+pydantic = ">=2.6.4"
+
+[tool.poetry.group.lint.dependencies]
+pre-commit = "^4.2.0"
+black = "^24.10.0"
+mypy = "^1.15"
+ruff = "^0.11.5"
+
+
+[tool.poetry.group.test.dependencies]
+pytest = "^8.3.5"
+pytest-cov = "^6.1.1"
+pytest-asyncio = "^0.26.0"
+aiosqlite = ">=0.21.0"
+
+
+
+[tool.black]
+line-length = 100
+target-version = ["py310"]
+exclude = '''(
+    alembic/
+)'''
+
+[tool.ruff]
+# Same as Black.
+line-length = 100
+indent-width = 4
+target-version = "py310"
+exclude = ["alembic", "**/*_pb2.py", "**/*_pb2_grpc.py"]
+
+
+[tool.ruff.lint]
+select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # pyflakes
+    "I",  # isort
+    "B",  # flake8-bugbear
+    "C4", # flake8-comprehensions
+    "UP", # pyupgrade
+]
+ignore = [
+    "E203", # Whitespace before ':'
+    "E501", # Line too long（由 black 管理）
+    "E402", # Module level import not at top
+    "E731", # Do not assign a lambda expression
+    "B007", # Loop control variable not used
+    "B008", # do not perform function calls in argument defaults
+    "B009", # Do not call getattr with a constant attribute value
+    "B010", # Do not call setattr with a constant attribute value
+    "B011", # Do not assert False
+    "B020", # Loop variable overwritten in comprehension
+    "B023", # Function definition does not bind loop variable
+    "B024", # Abstract base class without abstract method
+    "B026", # Star-arg unpacking after keyword arguments
+    "B027", # Empty method in base class
+    "C901", # Too complex
+    "W191", # indentation contains tabs
+]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401"] # 排除init文件里没用到的import（这个配置在fastapi、sqlmodel等项目中是关闭的）
+
+[tool.ruff.lint.isort]
+known-third-party = []
+
+[tool.ruff.lint.pyupgrade]
+# Preserve types, even if a file imports `from __future__ import annotations`.
+keep-runtime-typing = true
+
+
+[tool.mypy]
+# strict = true
+plugins = ["pydantic.mypy"]
+files = ["pymong"]
+exclude = []
+
+[[tool.mypy.overrides]]
+module = [
+    "grpc.*",
+    "google.protobuf.*",
+]
+ignore_missing_imports = true

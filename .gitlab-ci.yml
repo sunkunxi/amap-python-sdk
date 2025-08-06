@@ -1,0 +1,8 @@
+variables:
+  SONAR_EXCLUSIONS: "**/alembic/**,**/tests/**"
+
+
+include:
+  - project: "mongsion/gitlab-ci"
+    ref: main
+    file: "/mongsion-python-publish-ci.gitlab-ci.yml"
