@@ -2,6 +2,7 @@ from collections.abc import Callable
 from typing import Any, Literal
 
 from pyamap import base
+from pyamap.types import T_ShowFields
 
 
 class Place(base.ApiAgent):
@@ -16,7 +17,7 @@ class Place(base.ApiAgent):
         types: list[str] | None = None,
         region: str | None = None,
         city_limit: bool | None = None,
-        show_fields: list[str] | None = None,
+        show_fields: T_ShowFields | None = None,
         page_size: int | None = None,
         page_num: int | None = None,
         sig: str | None = None,
@@ -71,7 +72,7 @@ class Place(base.ApiAgent):
         types: list[str] | None = None,
         region: str | None = None,
         city_limit: bool | None = None,
-        show_fields: list[str] | None = None,
+        show_fields: T_ShowFields | None = None,
         page_size: int | None = None,
         page_num: int | None = None,
         sig: str | None = None,
@@ -106,7 +107,7 @@ class Place(base.ApiAgent):
         sortrule: Literal["distance", "weight"] | None = None,
         region: str | None = None,
         city_limit: bool | None = None,
-        show_fields: list[str] | None = None,
+        show_fields: T_ShowFields | None = None,
         page_size: int | None = None,
         page_num: int | None = None,
         sig: str | None = None,
@@ -151,7 +152,7 @@ class Place(base.ApiAgent):
         *coordinates: tuple[str, str],
         keywords: str | None = None,
         types: list[str] | None = None,
-        show_fields: list[str] | None = None,
+        show_fields: T_ShowFields | None = None,
         page_size: int | None = None,
         page_num: int | None = None,
         sig: str | None = None,
@@ -183,6 +184,7 @@ class Place(base.ApiAgent):
     def detail(
         self,
         *ids: str,
+        show_fields: T_ShowFields | None = None,
         sig: str | None = None,
         output: Literal["json"] | None = None,
         callback: Callable | None = None,
@@ -190,6 +192,7 @@ class Place(base.ApiAgent):
         """ID搜索"""
 
         params = self._init_params(
+            show_fields=show_fields,
             sig=sig,
             output=output,
             callback=callback,
