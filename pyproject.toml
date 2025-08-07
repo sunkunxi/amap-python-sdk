@@ -10,7 +10,8 @@ readme = "README.md"
 requires-python = ">=3.10,<4.0"
 dependencies = [
     "aiohttp (>=3.12.15,<4.0.0)",
-    "types-requests (>=2.32.4.20250611,<3.0.0.0)"
+    "types-requests (>=2.32.4.20250611,<3.0.0.0)",
+    "requests (>=2.32.4,<3.0.0)"
 ]
 
 
@@ -28,10 +29,6 @@ priority = "primary"
 name = "mongsion-hosted"
 url = "https://nexus.mongsion.com/repository/pypi-hosted/"
 
-
-[tool.poetry.dependencies]
-aiohttp = "^3.12.15"
-requests = "^2.32.4"
 
 [tool.poetry.group.lint.dependencies]
 pre-commit = "^4.2.0"
