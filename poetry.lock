@@ -1577,4 +1577,4 @@ reference = "mongsion"
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<4.0"
-content-hash = "3aaca9ab608e83a06033fe0981163c7e8346cebf28530314f79a46505bc86591"
+content-hash = "26e549259c13b61fc9a475e3e322f877b38d4c0cca9a6862db84b2f1c2eb4610"
