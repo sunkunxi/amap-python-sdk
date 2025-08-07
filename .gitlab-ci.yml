@@ -1,8 +1,77 @@
+stages:
+  - lint
+  - test
+  - publish
+
+# pip的缓存
+cache:
+  paths:
+    - .cache/pip
+
 variables:
   SONAR_EXCLUSIONS: "**/alembic/**,**/tests/**"
 
-
 include:
-  - project: "mongsion/gitlab-ci"
+  - project: "cicd/gitlab-ci-helpers"
     ref: main
-    file: "/mongsion-python-publish-ci.gitlab-ci.yml"
+    file: "/after-script/wecom-notify.gitlab-ci.yml"
+  - project: "cicd/gitlab-ci-helpers"
+    ref: main
+    file: "/template/docker-build-push.gitlab-ci.yml"
+  - project: "cicd/gitlab-ci-helpers"
+    ref: main
+    file: "/template/apifox.gitlab-ci.yml"
+
+.get-version:
+  before_script:
+    # 一些不同环境的变量
+    - |
+      if [ "$CI_COMMIT_BRANCH" == "develop" ]; then
+        APP_VERSION="development";
+      elif [ "$CI_COMMIT_TAG" ]; then
+        APP_VERSION=$CI_COMMIT_TAG;
+      else
+        APP_VERSION=$(echo $CI_COMMIT_REF_NAME | cut -d'/' -f 2);
+      fi
+    - echo $APP_VERSION
+
+lint-test:
+  stage: lint
+  image: harbor.mongsion.com/base-images/python:3.10-slim
+  extends:
+    - .wecom-notify
+  script:
+    # 这里的poetry运行全部install，没有指定环境，因为可能要检查单元测试目录
+    - poetry install
+    - poetry run black .
+    - poetry run ruff check --force-exclude
+    - poetry run ruff format --force-exclude
+    - poetry run mypy
+
+unit-test:
+  stage: test
+  image: harbor.mongsion.com/base-images/python:3.10-slim
+  variables:
+    API_KEY: "${API_KEY}"
+  extends:
+    - .get-version
+    - .wecom-notify
+  script:
+    - poetry install --only main,test
+    - poetry run pytest -v
+
+publish:
+  stage: publish
+  image: harbor.mongsion.com/base-images/python:3.10-slim
+  extends:
+    - .get-version
+    - .wecom-notify
+  script:
+    # 更新版本号
+    - poetry version "$CI_COMMIT_TAG"
+    # 配置上传密钥
+    - poetry config http-basic.mongsion-hosted "$APP_DEVOPS_USERNAME" "$APP_DEVOPS_PASSWORD"
+    # 构建 + 发布
+    - poetry publish -r mongsion-hosted --build --verbose
+  rules:
+    - if: '$CI_COMMIT_TAG'
