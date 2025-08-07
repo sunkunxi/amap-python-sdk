@@ -22,7 +22,8 @@ class HTTPClient(base.HTTPClient):
     ):
         url = self.url(path)
         params["key"] = self.api_key
-        return self.session.get(url, params=params, headers=headers, data=data)
+        res = self.session.get(url, params=params, headers=headers, data=data)
+        return res.json()
 
     def put(
         self,
@@ -34,7 +35,8 @@ class HTTPClient(base.HTTPClient):
     ):
         url = self.url(path)
         params["key"] = self.api_key
-        return self.session.put(url, params=params, headers=headers)
+        res = self.session.put(url, params=params, headers=headers)
+        return res.json()
 
     def delete(
         self,
@@ -46,7 +48,8 @@ class HTTPClient(base.HTTPClient):
     ):
         url = self.url(path)
         params["key"] = self.api_key
-        return self.session.delete(url, params=params, headers=headers)
+        res = self.session.delete(url, params=params, headers=headers)
+        return res.json()
 
     def post(
         self,
@@ -58,7 +61,8 @@ class HTTPClient(base.HTTPClient):
     ):
         url = self.url(path)
         params["key"] = self.api_key
-        return self.session.post(url, params=params, headers=headers)
+        res = self.session.post(url, params=params, headers=headers)
+        return res.json()
 
     def close(self) -> None:
         self.session.close()
