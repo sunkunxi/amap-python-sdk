@@ -453,6 +453,25 @@ url = "https://nexus.mongsion.com/repository/pypi/simple"
 reference = "mongsion"
 
 [[package]]
+name = "dotenv"
+version = "0.9.9"
+description = "Deprecated package"
+optional = false
+python-versions = "*"
+groups = ["test"]
+files = [
+    {file = "dotenv-0.9.9-py2.py3-none-any.whl", hash = "sha256:29cf74a087b31dafdb5a446b6d7e11cbce8ed2741540e2339c69fbef92c94ce9"},
+]
+
+[package.dependencies]
+python-dotenv = "*"
+
+[package.source]
+type = "legacy"
+url = "https://nexus.mongsion.com/repository/pypi/simple"
+reference = "mongsion"
+
+[[package]]
 name = "exceptiongroup"
 version = "1.3.0"
 description = "Backport of PEP 654 (exception groups)"
@@ -1215,6 +1234,26 @@ url = "https://nexus.mongsion.com/repository/pypi/simple"
 reference = "mongsion"
 
 [[package]]
+name = "python-dotenv"
+version = "1.1.1"
+description = "Read key-value pairs from a .env file and set them as environment variables"
+optional = false
+python-versions = ">=3.9"
+groups = ["test"]
+files = [
+    {file = "python_dotenv-1.1.1-py3-none-any.whl", hash = "sha256:31f23644fe2602f88ff55e1f5c79ba497e01224ee7737937930c448e4d0e24dc"},
+    {file = "python_dotenv-1.1.1.tar.gz", hash = "sha256:a8a6399716257f45be6a007360200409fce5cda2661e3dec71d23dc15f6189ab"},
+]
+
+[package.extras]
+cli = ["click (>=5.0)"]
+
+[package.source]
+type = "legacy"
+url = "https://nexus.mongsion.com/repository/pypi/simple"
+reference = "mongsion"
+
+[[package]]
 name = "pyyaml"
 version = "6.0.2"
 description = "YAML parser and emitter for Python"
@@ -1577,4 +1616,4 @@ reference = "mongsion"
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<4.0"
-content-hash = "26e549259c13b61fc9a475e3e322f877b38d4c0cca9a6862db84b2f1c2eb4610"
+content-hash = "617d141e74057e815720923f1931d3169c7c9561b731bd14d193a19cc34cd607"
