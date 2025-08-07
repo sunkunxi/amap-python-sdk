@@ -6,8 +6,7 @@ from pyamap.api.weather import Weather
 def test_weather_info(amap):
     weather = Weather(amap)
     res = weather.info("成都市")
-    assert res.json()
-    print(res.json())
+    assert res
 
 
 @pytest.mark.asyncio
