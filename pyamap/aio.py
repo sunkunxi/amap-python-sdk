@@ -9,7 +9,7 @@ from pyamap.api.weather import Weather
 from .types import T_Headers, T_Params
 
 if TYPE_CHECKING:
-    from types import TracebackType
+    pass
 
 
 class HTTPClient(base.HTTPClient):
