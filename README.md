@@ -5,6 +5,9 @@
 2. aio支持
 3. 类型支持
 
+The code structure of this repository is inspired by [py-consul](!https://github.com/criteo/py-consul)
+
+
 Example
 -------
 
