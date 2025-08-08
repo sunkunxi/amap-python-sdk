@@ -36,7 +36,7 @@ class HTTPClient(base.HTTPClient):
         res = await self.session.request(method, url, params=params, headers=headers, data=data)
         return await res.json()
 
-    async def get(
+    def get(
         self,
         path: str,
         *,
@@ -44,9 +44,9 @@ class HTTPClient(base.HTTPClient):
         headers: T_Headers | None = None,
         data: str | None = None,
     ) -> base.AmapResult:
-        return await self._request("GET", path=path, params=params, headers=headers, data=data)
+        return self._request("GET", path=path, params=params, headers=headers, data=data)  # type: ignore[return-value]
 
-    async def put(
+    def put(
         self,
         path: str,
         *,
@@ -54,9 +54,9 @@ class HTTPClient(base.HTTPClient):
         data: str | None = None,
         headers: T_Headers | None = None,
     ) -> base.AmapResult:
-        return await self._request("PUT", path=path, params=params, headers=headers, data=data)
+        return self._request("PUT", path=path, params=params, headers=headers, data=data)  # type: ignore[return-value]
 
-    async def delete(
+    def delete(
         self,
         path: str,
         *,
@@ -64,9 +64,9 @@ class HTTPClient(base.HTTPClient):
         data: str | None = None,
         headers: T_Headers | None = None,
     ) -> base.AmapResult:
-        return await self._request("DELETE", path=path, params=params, headers=headers, data=data)
+        return self._request("DELETE", path=path, params=params, headers=headers, data=data)  # type: ignore[return-value]
 
-    async def post(
+    def post(
         self,
         path: str,
         *,
@@ -74,7 +74,7 @@ class HTTPClient(base.HTTPClient):
         data: str | None = None,
         headers: T_Headers | None = None,
     ) -> base.AmapResult:
-        return await self._request("POST", path=path, params=params, headers=headers, data=data)
+        return self._request("POST", path=path, params=params, headers=headers, data=data)  # type: ignore[return-value]
 
     async def close(self) -> None:
         await self.session.close()
