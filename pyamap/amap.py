@@ -1,6 +1,7 @@
 import requests
 
 from pyamap import base
+from pyamap.api.district import District
 from pyamap.api.place import Place
 from pyamap.api.weather import Weather
 
@@ -19,7 +20,7 @@ class HTTPClient(base.HTTPClient):
         params: T_Params,
         data: str | None = None,
         headers: T_Headers | None = None,
-    ):
+    ) -> base.AmapResult:
         url = self.url(path)
         params["key"] = self.api_key
         res = self.session.get(url, params=params, headers=headers, data=data)
@@ -32,7 +33,7 @@ class HTTPClient(base.HTTPClient):
         params: T_Params,
         data: str | None = None,
         headers: T_Headers | None = None,
-    ):
+    ) -> base.AmapResult:
         url = self.url(path)
         params["key"] = self.api_key
         res = self.session.put(url, params=params, headers=headers, data=data)
@@ -45,7 +46,7 @@ class HTTPClient(base.HTTPClient):
         params: T_Params,
         data: str | None = None,
         headers: T_Headers | None = None,
-    ):
+    ) -> base.AmapResult:
         url = self.url(path)
         params["key"] = self.api_key
         res = self.session.delete(url, params=params, headers=headers, data=data)
@@ -58,7 +59,7 @@ class HTTPClient(base.HTTPClient):
         params: T_Params,
         data: str | None = None,
         headers: T_Headers | None = None,
-    ):
+    ) -> base.AmapResult:
         url = self.url(path)
         params["key"] = self.api_key
         res = self.session.post(url, params=params, headers=headers, data=data)

@@ -15,7 +15,7 @@ class Weather(base.ApiAgent):
         *,
         extensions: Literal["base", "all"] | None = None,
         output: Literal["json", "xml"] | None = None,
-    ):
+    ) -> base.AmapResult:
         """天气查询"""
 
         params: dict[str, Any] = {}

@@ -1,10 +1,14 @@
 import abc
 import logging
+from typing import Any
 from urllib.parse import urljoin
 
 from .types import T_Headers, T_Params
 
 logger = logging.getLogger(__name__)
+
+
+AmapResult = dict[str, Any]
 
 
 class HTTPClient(metaclass=abc.ABCMeta):
@@ -23,7 +27,7 @@ class HTTPClient(metaclass=abc.ABCMeta):
         params: T_Params,
         data: str | None = None,
         headers: T_Headers | None = None,
-    ):
+    ) -> AmapResult:
         raise NotImplementedError()
 
     @abc.abstractmethod
@@ -34,7 +38,7 @@ class HTTPClient(metaclass=abc.ABCMeta):
         params: T_Params,
         data: str | None = None,
         headers: T_Headers | None = None,
-    ):
+    ) -> AmapResult:
         raise NotImplementedError()
 
     @abc.abstractmethod
@@ -45,7 +49,7 @@ class HTTPClient(metaclass=abc.ABCMeta):
         params: T_Params,
         data: str | None = None,
         headers: T_Headers | None = None,
-    ):
+    ) -> AmapResult:
         raise NotImplementedError()
 
     @abc.abstractmethod
@@ -56,7 +60,7 @@ class HTTPClient(metaclass=abc.ABCMeta):
         params: T_Params,
         data: str | None = None,
         headers: T_Headers | None = None,
-    ):
+    ) -> AmapResult:
         raise NotImplementedError()
 
     @abc.abstractmethod

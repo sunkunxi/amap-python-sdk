@@ -77,8 +77,7 @@ class Place(base.ApiAgent):
         page_num: int | None = None,
         sig: str | None = None,
         output: Literal["json"] | None = None,
-        callback: Callable | None = None,
-    ):
+    ) -> base.AmapResult:
         """关键字搜索"""
 
         params = self._init_params(
@@ -91,7 +90,6 @@ class Place(base.ApiAgent):
             page_num=page_num,
             sig=sig,
             output=output,
-            callback=callback,
         )
 
         return self.amap.http.get(path="/v5/place/text", params=params)
@@ -112,8 +110,7 @@ class Place(base.ApiAgent):
         page_num: int | None = None,
         sig: str | None = None,
         output: Literal["json"] | None = None,
-        callback: Callable | None = None,
-    ):
+    ) -> base.AmapResult:
         """周边搜索"""
 
         params = self._init_params(
@@ -126,7 +123,6 @@ class Place(base.ApiAgent):
             page_num=page_num,
             sig=sig,
             output=output,
-            callback=callback,
         )
 
         if not longitude or not latitude:
@@ -157,8 +153,7 @@ class Place(base.ApiAgent):
         page_num: int | None = None,
         sig: str | None = None,
         output: Literal["json"] | None = None,
-        callback: Callable | None = None,
-    ):
+    ) -> base.AmapResult:
         """多边形区域搜索"""
 
         params = self._init_params(
@@ -169,7 +164,6 @@ class Place(base.ApiAgent):
             page_num=page_num,
             sig=sig,
             output=output,
-            callback=callback,
         )
 
         if len(coordinates) < 2:
@@ -187,15 +181,13 @@ class Place(base.ApiAgent):
         show_fields: T_ShowFields | None = None,
         sig: str | None = None,
         output: Literal["json"] | None = None,
-        callback: Callable | None = None,
-    ):
+    ) -> base.AmapResult:
         """ID搜索"""
 
         params = self._init_params(
             show_fields=show_fields,
             sig=sig,
             output=output,
-            callback=callback,
         )
         if len(ids) > 10:
             raise ValueError("ids should not more then 10")

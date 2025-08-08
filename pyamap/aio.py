@@ -29,51 +29,51 @@ class HTTPClient(base.HTTPClient):
         params: T_Params,
         data: str | None = None,
         headers: T_Headers | None = None,
-    ) -> dict:
+    ) -> base.AmapResult:
         url = self.url(path)
         params = self._prepara_params(params)
         res = await self.session.request(method, url, params=params, headers=headers, data=data)
         return await res.json()
 
-    def get(
+    async def get(
         self,
         path: str,
         *,
         params: T_Params,
         headers: T_Headers | None = None,
         data: str | None = None,
-    ):
-        return self._request("GET", path=path, params=params, headers=headers, data=data)
+    ) -> base.AmapResult:
+        return await self._request("GET", path=path, params=params, headers=headers, data=data)
 
-    def put(
+    async def put(
         self,
         path: str,
         *,
         params: T_Params,
         data: str | None = None,
         headers: T_Headers | None = None,
-    ):
-        return self._request("PUT", path=path, params=params, headers=headers, data=data)
+    ) -> base.AmapResult:
+        return await self._request("PUT", path=path, params=params, headers=headers, data=data)
 
-    def delete(
+    async def delete(
         self,
         path: str,
         *,
         params: T_Params,
         data: str | None = None,
         headers: T_Headers | None = None,
-    ):
-        return self._request("DELETE", path=path, params=params, headers=headers, data=data)
+    ) -> base.AmapResult:
+        return await self._request("DELETE", path=path, params=params, headers=headers, data=data)
 
-    def post(
+    async def post(
         self,
         path: str,
         *,
         params: T_Params,
         data: str | None = None,
         headers: T_Headers | None = None,
-    ):
-        return self._request("POST", path=path, params=params, headers=headers, data=data)
+    ) -> base.AmapResult:
+        return await self._request("POST", path=path, params=params, headers=headers, data=data)
 
     async def close(self) -> None:
         await self.session.close()
