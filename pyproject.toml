@@ -1,6 +1,6 @@
 [project]
 name = "pyamap"
-version = "0.0.1"
+version = "0.0.4"
 description = "高德地图Python SDK"
 authors = [
     {name = "KunxiSun",email = "sunkunxi@mongsion.com"}
