@@ -1,5 +1,3 @@
-from typing import TYPE_CHECKING
-
 import aiohttp
 from typing_extensions import Self
 
@@ -7,10 +5,7 @@ from pyamap import base
 from pyamap.api.place import Place
 from pyamap.api.weather import Weather
 
-from .types import T_Headers, T_Params
-
-if TYPE_CHECKING:
-    pass
+from .types import RequestMethods, T_Headers, T_Params
 
 
 class HTTPClient(base.HTTPClient):
@@ -26,17 +21,29 @@ class HTTPClient(base.HTTPClient):
         # convert python bool to "true" or "false"
         return {k: str(v).lower() if isinstance(v, bool) else v for k, v in params.items()}
 
+    async def _request(
+        self,
+        method: RequestMethods,
+        *,
+        path: str,
+        params: T_Params,
+        data: str | None = None,
+        headers: T_Headers | None = None,
+    ) -> dict:
+        url = self.url(path)
+        params = self._prepara_params(params)
+        res = await self.session.request(method, url, params=params, headers=headers, data=data)
+        return await res.json()
+
     def get(
         self,
         path: str,
         *,
         params: T_Params,
-        data: str | None = None,
         headers: T_Headers | None = None,
+        data: str | None = None,
     ):
-        url = self.url(path)
-        params = self._prepara_params(params)
-        return self.session.get(url, params=params, headers=headers, data=data)
+        return self._request("GET", path=path, params=params, headers=headers, data=data)
 
     def put(
         self,
@@ -46,9 +53,7 @@ class HTTPClient(base.HTTPClient):
         data: str | None = None,
         headers: T_Headers | None = None,
     ):
-        url = self.url(path)
-        params = self._prepara_params(params)
-        return self.session.put(url, params=params, headers=headers, data=data)
+        return self._request("PUT", path=path, params=params, headers=headers, data=data)
 
     def delete(
         self,
@@ -58,9 +63,7 @@ class HTTPClient(base.HTTPClient):
         data: str | None = None,
         headers: T_Headers | None = None,
     ):
-        url = self.url(path)
-        params = self._prepara_params(params)
-        return self.session.delete(url, params=params, headers=headers, data=data)
+        return self._request("DELETE", path=path, params=params, headers=headers, data=data)
 
     def post(
         self,
@@ -70,9 +73,7 @@ class HTTPClient(base.HTTPClient):
         data: str | None = None,
         headers: T_Headers | None = None,
     ):
-        url = self.url(path)
-        params = self._prepara_params(params)
-        return self.session.post(url, params=params, headers=headers, data=data)
+        return self._request("POST", path=path, params=params, headers=headers, data=data)
 
     async def close(self) -> None:
         await self.session.close()
@@ -109,6 +110,9 @@ class Amap(base.Amap):
 
     async def __aexit__(self, exc_type, exc_value, traceback):
         await self.close()
+
+    def __await__(self):
+        return self.initialize().__await__()
 
     async def close(self):
         return await self.http.close()

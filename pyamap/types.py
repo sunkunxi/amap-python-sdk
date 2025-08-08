@@ -5,3 +5,5 @@ T_Headers = dict[str, str]
 
 # Poi2.0 show_fields params
 T_ShowFields = list[Literal["children", "business", "indoor", "navi", "photos"]]
+
+RequestMethods = Literal["POST", "GET", "PUT", "DELETE"]

@@ -5,29 +5,29 @@ from pyamap.api.place import Place
 
 def test_place_text(amap):
     place = Place(amap)
-    res = place.text("成都市")
-    assert res
+    result = place.text("成都市")
+    assert result
 
 
 def test_place_arround(amap, sample_coordinate):
     place = Place(amap)
 
     longitude, latitude = sample_coordinate
-    res = place.arround("成都市", longitude=longitude, latitude=latitude)
-    assert res
+    result = place.arround("成都市", longitude=longitude, latitude=latitude)
+    assert result
 
 
 def test_place_polygon(amap, sample_polygon):
     place = Place(amap)
-    res = place.polygon(*sample_polygon)
-    assert res
+    result = place.polygon(*sample_polygon)
+    assert result
 
 
 def test_place_detai_one_id(amap, sample_ids):
     place = Place(amap)
     one_id = sample_ids[0]
-    res = place.detail(one_id)
-    assert res
+    result = place.detail(one_id)
+    assert result
 
 
 def test_place_detail_multi_id(amap, sample_ids):
@@ -39,24 +39,23 @@ def test_place_detail_multi_id(amap, sample_ids):
 @pytest.mark.asyncio
 async def test_aio_place_text(aio_amap):
     place = Place(aio_amap)
-    res = await place.text("成都市")
-    assert res
+    result = await place.text("成都市")
+    assert result
 
 
 @pytest.mark.asyncio
 async def test_aio_place_arround(aio_amap, sample_coordinate):
     place = Place(aio_amap)
     longitude, latitude = sample_coordinate
-    res = await place.arround("成都市", longitude=longitude, latitude=latitude)
-    assert res
+    result = await place.arround("成都市", longitude=longitude, latitude=latitude)
+    assert result
 
 
 @pytest.mark.asyncio
 async def test_aio_place_polygon(aio_amap, sample_polygon):
     place = Place(aio_amap)
     result = await place.polygon(*sample_polygon)
-    data = await result.json()
-    assert data
+    assert result
 
 
 @pytest.mark.asyncio
@@ -64,13 +63,11 @@ async def test_aio_place_detai_one_id(aio_amap, sample_ids):
     place = Place(aio_amap)
     one_id = sample_ids[0]
     result = await place.detail(one_id)
-    data = await result.json()
-    assert data
+    assert result
 
 
 @pytest.mark.asyncio
 async def test_aio_place_detail_multi_id(aio_amap, sample_ids):
     place = Place(aio_amap)
     result = await place.detail(*sample_ids)
-    data = await result.json()
-    assert data
+    assert result

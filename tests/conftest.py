@@ -48,5 +48,12 @@ def amap(api_key: str):
 
 @pytest_asyncio.fixture(scope="function")
 async def aio_amap(api_key: str):
+    """try async with initialize"""
     async with AioAmap(api_key=api_key) as aio_amap:
         yield aio_amap
+
+
+@pytest_asyncio.fixture(scope="function")
+async def aio_amap2(api_key: str):
+    """try await initialize"""
+    return await AioAmap(api_key=api_key)
