@@ -75,6 +75,7 @@ class Amap(base.Amap):
 
         self.place = Place(self)
         self.weather = Weather(self)
+        self.district = District(self)
 
         self._http = HTTPClient(self.api_key, self.BASE_URL)
 

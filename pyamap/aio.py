@@ -2,6 +2,7 @@ import aiohttp
 from typing_extensions import Self
 
 from pyamap import base
+from pyamap.api.district import District
 from pyamap.api.place import Place
 from pyamap.api.weather import Weather
 
@@ -86,6 +87,7 @@ class Amap(base.Amap):
 
         self.place = Place(self)
         self.weather = Weather(self)
+        self.district = District(self)
 
         self._http = None
 
