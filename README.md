@@ -22,9 +22,11 @@ res = amap.place.arround("成都市", longitude="116.407082", latitude="39.91046
 res = amap.place.polygon(("116.407082", "39.910464"), ("117.407082", "40.910464"))
 res = amap.place.detail("POI_ID")
 
-
 # Weather
 res = amap.weather.info("成都市")
+
+# District
+res = amap.district.list()
 ```
 ```python
 
@@ -39,7 +41,9 @@ res = await amap.place.arround("成都市", longitude="116.407082", latitude="39
 res = await amap.place.polygon(("116.407082", "39.910464"), ("117.407082", "40.910464"))
 res = await amap.place.detail("POI_ID")
 
-
 # Weather API
-res = amap.weather.info("成都市")
+res = await amap.weather.info("成都市")
+
+# District
+res = await amap.district.list()
 ```
