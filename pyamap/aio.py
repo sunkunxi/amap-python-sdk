@@ -33,7 +33,7 @@ class HTTPClient(base.HTTPClient):
         params: T_Params,
         data: str | None = None,
         headers: T_Headers | None = None,
-    ) -> dict:
+    ):
         url = self.url(path)
         params = self._prepara_params(params)
         return self.session.get(url, params=params, headers=headers, data=data)
