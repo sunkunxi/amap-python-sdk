@@ -4,7 +4,7 @@ from pyamap.aio import HTTPClient
 from pyamap.api.district import District
 from pyamap.api.place import Place
 from pyamap.api.weather import Weather
-
+from pyamap.api.georegeo import Georegeo
 
 @pytest.mark.asyncio
 async def test_amap_init(aio_amap):
@@ -30,3 +30,4 @@ async def test_amap_api_agent_initiailize(aio_amap2):
     assert aio_amap2.place and isinstance(aio_amap2.place, Place)
     assert aio_amap2.weather and isinstance(aio_amap2.weather, Weather)
     assert aio_amap2.district and isinstance(aio_amap2.district, District)
+    assert aio_amap2.georegeo and isinstance(aio_amap2.georegeo, Georegeo)
