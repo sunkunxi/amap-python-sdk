@@ -12,15 +12,10 @@ variables:
   SONAR_EXCLUSIONS: "**/alembic/**,**/tests/**"
 
 include:
-  - project: "cicd/gitlab-ci-helpers"
-    ref: main
-    file: "/after-script/wecom-notify.gitlab-ci.yml"
-  - project: "cicd/gitlab-ci-helpers"
-    ref: main
-    file: "/template/docker-build-push.gitlab-ci.yml"
-  - project: "cicd/gitlab-ci-helpers"
-    ref: main
-    file: "/template/apifox.gitlab-ci.yml"
+  - component: $CI_SERVER_FQDN/cicd/gitlab-ci-helpers/pipeline-notify@0.1.0
+    # 发布流水线通知
+    inputs:
+      wecom_webhook_url: $WECOM_WEBHOOK_URL
 
 .get-version:
   before_script:
