@@ -11,7 +11,8 @@
 Copyright © 2026 Mongsion.All Rights Reserved.
 """
 
-from typing import Literal, Any
+from typing import Any, Literal
+
 from pyamap import base
 
 
@@ -21,11 +22,10 @@ class Georegeo(base.ApiAgent):
     地址:https://lbs.amap.com/api/webservice/guide/api/georegeo
     """
 
-
     def geo(
         self,
         address: str,
-        city: str| None = None,
+        city: str | None = None,
     ):
         """地理编码 API 服务地址
 
@@ -47,7 +47,6 @@ class Georegeo(base.ApiAgent):
 
         return self.amap.http.get("/v3/geocode/geo", params=params)
 
-
     def regeo(
         self,
         longitude: str,
@@ -56,8 +55,8 @@ class Georegeo(base.ApiAgent):
         poitype: list[str] | None = None,
         radius: int | None = None,
         extensions: Literal["base", "all"] = "base",
-        roadlevel: Literal[0,1] | None  = None,
-        homeorcorp: Literal[0,1,2] | None = 0,
+        roadlevel: Literal[0, 1] | None = None,
+        homeorcorp: Literal[0, 1, 2] | None = 0,
     ):
         """逆地理编码 API 服务地址
 
@@ -80,7 +79,6 @@ class Georegeo(base.ApiAgent):
                 1:综合大数据分析将居家相关的 POI 内容优先返回,即优化返回结果中 pois 字段的poi 顺序.
                 2:综合大数据分析将公司相关的 POI 内容优先返回,即优化返回结果中 pois 字段的poi 顺序.
         """
-
 
         params: dict[str, Any] = {}
 

@@ -2,9 +2,10 @@ import pytest
 
 from pyamap.aio import HTTPClient
 from pyamap.api.district import District
+from pyamap.api.georegeo import Georegeo
 from pyamap.api.place import Place
 from pyamap.api.weather import Weather
-from pyamap.api.georegeo import Georegeo
+
 
 @pytest.mark.asyncio
 async def test_amap_init(aio_amap):

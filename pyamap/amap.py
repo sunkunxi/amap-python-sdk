@@ -2,9 +2,9 @@ import requests
 
 from pyamap import base
 from pyamap.api.district import District
+from pyamap.api.georegeo import Georegeo
 from pyamap.api.place import Place
 from pyamap.api.weather import Weather
-from pyamap.api.georegeo import Georegeo
 
 from .types import T_Headers, T_Params
 
