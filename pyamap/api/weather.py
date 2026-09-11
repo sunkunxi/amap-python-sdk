@@ -3,7 +3,7 @@ from typing import Any, Literal
 from pyamap import base
 
 
-class Weather(base.ApiAgent):
+class Weather(base.ApiAgent[base.AmapResultT]):
     """
     天气查询
     地址：https://lbs.amap.com/api/webservice/guide/api-advanced/weatherinfo
@@ -15,7 +15,7 @@ class Weather(base.ApiAgent):
         *,
         extensions: Literal["base", "all"] | None = None,
         output: Literal["json", "xml"] | None = None,
-    ) -> base.AmapResult:
+    ) -> base.AmapResultT:
         """天气查询"""
 
         params: dict[str, Any] = {}

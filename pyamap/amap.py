@@ -9,7 +9,7 @@ from pyamap.api.weather import Weather
 from .types import T_Headers, T_Params
 
 
-class HTTPClient(base.HTTPClient):
+class HTTPClient(base.HTTPClient[base.AmapResult]):
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.session = requests.Session()
@@ -70,7 +70,7 @@ class HTTPClient(base.HTTPClient):
         self.session.close()
 
 
-class Amap(base.Amap):
+class Amap(base.Amap[base.AmapResult]):
     def __init__(self, api_key: str) -> None:
         self.api_key = api_key
 

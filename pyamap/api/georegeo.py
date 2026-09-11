@@ -17,7 +17,7 @@ from typing import Any, Literal
 from pyamap import base
 
 
-class Georegeo(base.ApiAgent):
+class Georegeo(base.ApiAgent[base.AmapResultT]):
     """
     地理/逆地理编码 2.0
     地址:https://lbs.amap.com/api/webservice/guide/api/georegeo
@@ -27,7 +27,7 @@ class Georegeo(base.ApiAgent):
         self,
         address: str,
         city: str | None = None,
-    ):
+    ) -> base.AmapResultT:
         """地理编码 API 服务地址
 
         Args:
@@ -58,7 +58,7 @@ class Georegeo(base.ApiAgent):
         extensions: Literal["base", "all"] = "base",
         roadlevel: Literal[0, 1] | None = None,
         homeorcorp: Literal[0, 1, 2] | None = 0,
-    ):
+    ) -> base.AmapResultT:
         """逆地理编码 API 服务地址
 
         Args:

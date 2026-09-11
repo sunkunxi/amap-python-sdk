@@ -1,6 +1,6 @@
 import abc
 import logging
-from typing import Any
+from typing import Any, Generic, TypeVar
 from urllib.parse import urljoin
 
 from .types import T_Headers, T_Params
@@ -9,9 +9,10 @@ logger = logging.getLogger(__name__)
 
 
 AmapResult = dict[str, Any]
+AmapResultT = TypeVar("AmapResultT")
 
 
-class HTTPClient(metaclass=abc.ABCMeta):
+class HTTPClient(Generic[AmapResultT], metaclass=abc.ABCMeta):
     def __init__(self, api_key: str, base_url: str) -> None:
         self.api_key = api_key
         self.base_url = base_url
@@ -27,7 +28,7 @@ class HTTPClient(metaclass=abc.ABCMeta):
         params: T_Params,
         data: str | None = None,
         headers: T_Headers | None = None,
-    ) -> AmapResult:
+    ) -> AmapResultT:
         raise NotImplementedError()
 
     @abc.abstractmethod
@@ -38,7 +39,7 @@ class HTTPClient(metaclass=abc.ABCMeta):
         params: T_Params,
         data: str | None = None,
         headers: T_Headers | None = None,
-    ) -> AmapResult:
+    ) -> AmapResultT:
         raise NotImplementedError()
 
     @abc.abstractmethod
@@ -49,7 +50,7 @@ class HTTPClient(metaclass=abc.ABCMeta):
         params: T_Params,
         data: str | None = None,
         headers: T_Headers | None = None,
-    ) -> AmapResult:
+    ) -> AmapResultT:
         raise NotImplementedError()
 
     @abc.abstractmethod
@@ -60,7 +61,7 @@ class HTTPClient(metaclass=abc.ABCMeta):
         params: T_Params,
         data: str | None = None,
         headers: T_Headers | None = None,
-    ) -> AmapResult:
+    ) -> AmapResultT:
         raise NotImplementedError()
 
     @abc.abstractmethod
@@ -68,18 +69,18 @@ class HTTPClient(metaclass=abc.ABCMeta):
         raise NotImplementedError()
 
 
-class Amap(abc.ABC):
+class Amap(Generic[AmapResultT], abc.ABC):
     BASE_URL = "https://restapi.amap.com"
 
     @property
     @abc.abstractmethod
-    def http(self) -> HTTPClient:
+    def http(self) -> HTTPClient[AmapResultT]:
         raise NotImplementedError()
 
     def close(self):
         return self.http.close()
 
 
-class ApiAgent(abc.ABC):
-    def __init__(self, amap: Amap):
+class ApiAgent(Generic[AmapResultT], abc.ABC):
+    def __init__(self, amap: Amap[AmapResultT]):
         self.amap = amap

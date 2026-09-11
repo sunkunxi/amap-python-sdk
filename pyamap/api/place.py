@@ -6,7 +6,7 @@ from pyamap import base
 from pyamap.types import T_ShowFields
 
 
-class Place(base.ApiAgent):
+class Place(base.ApiAgent[base.AmapResultT]):
     """
     POI 2.0
     地址：https://lbs.amap.com/api/webservice/guide/api-advanced/newpoisearch
@@ -78,7 +78,7 @@ class Place(base.ApiAgent):
         page_num: int | None = None,
         sig: str | None = None,
         output: Literal["json"] | None = None,
-    ) -> base.AmapResult:
+    ) -> base.AmapResultT:
         """关键字搜索"""
 
         params = self._init_params(
@@ -111,7 +111,7 @@ class Place(base.ApiAgent):
         page_num: int | None = None,
         sig: str | None = None,
         output: Literal["json"] | None = None,
-    ) -> base.AmapResult:
+    ) -> base.AmapResultT:
         """周边搜索"""
 
         params = self._init_params(
@@ -154,7 +154,7 @@ class Place(base.ApiAgent):
         page_num: int | None = None,
         sig: str | None = None,
         output: Literal["json"] | None = None,
-    ) -> base.AmapResult:
+    ) -> base.AmapResultT:
         """多边形区域搜索"""
 
         params = self._init_params(
@@ -182,7 +182,7 @@ class Place(base.ApiAgent):
         show_fields: T_ShowFields | None = None,
         sig: str | None = None,
         output: Literal["json"] | None = None,
-    ) -> base.AmapResult:
+    ) -> base.AmapResultT:
         """ID搜索"""
 
         params = self._init_params(

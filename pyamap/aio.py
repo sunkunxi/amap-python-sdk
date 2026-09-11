@@ -1,3 +1,5 @@
+from collections.abc import Awaitable
+
 import aiohttp
 from typing_extensions import Self
 
@@ -10,7 +12,7 @@ from pyamap.api.weather import Weather
 from .types import RequestMethods, T_Headers, T_Params
 
 
-class HTTPClient(base.HTTPClient):
+class HTTPClient(base.HTTPClient[Awaitable[base.AmapResult]]):
     def __init__(self, *args, max_connector: int, **kwargs) -> None:
         super().__init__(*args, **kwargs)
 
@@ -37,7 +39,7 @@ class HTTPClient(base.HTTPClient):
         res = await self.session.request(method, url, params=params, headers=headers, data=data)
         return await res.json()
 
-    def get(
+    async def get(
         self,
         path: str,
         *,
@@ -45,9 +47,9 @@ class HTTPClient(base.HTTPClient):
         headers: T_Headers | None = None,
         data: str | None = None,
     ) -> base.AmapResult:
-        return self._request("GET", path=path, params=params, headers=headers, data=data)  # type: ignore[return-value]
+        return await self._request("GET", path=path, params=params, headers=headers, data=data)
 
-    def put(
+    async def put(
         self,
         path: str,
         *,
@@ -55,9 +57,9 @@ class HTTPClient(base.HTTPClient):
         data: str | None = None,
         headers: T_Headers | None = None,
     ) -> base.AmapResult:
-        return self._request("PUT", path=path, params=params, headers=headers, data=data)  # type: ignore[return-value]
+        return await self._request("PUT", path=path, params=params, headers=headers, data=data)
 
-    def delete(
+    async def delete(
         self,
         path: str,
         *,
@@ -65,9 +67,9 @@ class HTTPClient(base.HTTPClient):
         data: str | None = None,
         headers: T_Headers | None = None,
     ) -> base.AmapResult:
-        return self._request("DELETE", path=path, params=params, headers=headers, data=data)  # type: ignore[return-value]
+        return await self._request("DELETE", path=path, params=params, headers=headers, data=data)
 
-    def post(
+    async def post(
         self,
         path: str,
         *,
@@ -75,13 +77,13 @@ class HTTPClient(base.HTTPClient):
         data: str | None = None,
         headers: T_Headers | None = None,
     ) -> base.AmapResult:
-        return self._request("POST", path=path, params=params, headers=headers, data=data)  # type: ignore[return-value]
+        return await self._request("POST", path=path, params=params, headers=headers, data=data)
 
     async def close(self) -> None:
         await self.session.close()
 
 
-class Amap(base.Amap):
+class Amap(base.Amap[Awaitable[base.AmapResult]]):
     def __init__(self, api_key: str, max_connector: int = 100) -> None:
         self.api_key = api_key
         self.max_connector = max_connector

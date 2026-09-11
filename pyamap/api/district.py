@@ -4,7 +4,7 @@ from pyamap import base
 from pyamap.types import T_Extensions
 
 
-class District(base.ApiAgent):
+class District(base.ApiAgent[base.AmapResultT]):
     """
     行政区域
     地址：https://lbs.amap.com/api/webservice/guide/api/district
@@ -20,7 +20,7 @@ class District(base.ApiAgent):
         extensions: T_Extensions = "base",
         adcode: str | None = None,
         output: Literal["json", "xml"] = "json",
-    ) -> base.AmapResult:
+    ) -> base.AmapResultT:
         """列出行政区域
 
         Args:
