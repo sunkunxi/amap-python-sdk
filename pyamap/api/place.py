@@ -1,4 +1,5 @@
 from collections.abc import Callable
+from decimal import Decimal
 from typing import Any, Literal
 
 from pyamap import base
@@ -98,8 +99,8 @@ class Place(base.ApiAgent):
         self,
         keywords: str,
         *,
-        longitude: str,
-        latitude: str,
+        longitude: str | Decimal,
+        latitude: str | Decimal,
         radius: int | None = None,
         types: list[str] | None = None,
         sortrule: Literal["distance", "weight"] | None = None,

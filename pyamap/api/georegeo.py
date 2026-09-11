@@ -11,6 +11,7 @@
 Copyright © 2026 Mongsion.All Rights Reserved.
 """
 
+from decimal import Decimal
 from typing import Any, Literal
 
 from pyamap import base
@@ -49,8 +50,8 @@ class Georegeo(base.ApiAgent):
 
     def regeo(
         self,
-        longitude: str,
-        latitude: str,
+        longitude: str | Decimal,
+        latitude: str | Decimal,
         *,
         poitype: list[str] | None = None,
         radius: int | None = None,
@@ -61,8 +62,8 @@ class Georegeo(base.ApiAgent):
         """逆地理编码 API 服务地址
 
         Args:
-            longitude (str): 经度
-            latitude (str): 纬度
+            longitude (str | Decimal): 经度
+            latitude (str | Decimal): 纬度
             poitype (list[str] | None, optional): 返回附近 POI 类型
                 以下内容需要 extensions 参数为 all 时才生效.
                 逆地理编码在进行坐标解析之后不仅可以返回地址描述,也可以返回经纬度附近符合限定要求的 POI 内容（在 extensions 字段值为 all 时才会返回 POI 内容）.设置 POI 类型参数相当于为上述操作限定要求.参数仅支持传入 POI TYPECODE,可以传入多个 POI TYPECODE,相互之间用“|”分隔.
