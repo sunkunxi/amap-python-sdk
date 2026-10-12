@@ -1,16 +1,3 @@
-"""
-
-
-
-创建日期: 2026-01-21 10:33:55 Wednesday
-创建人: 孙堃曦 Kunxi Sun <sunkunxi@mongsion.com>
------
-上次修改: 2026-01-21 10:34:11 Wednesday
-修改人: 孙堃曦 Kunxi Sun <sunkunxi@mongsion.com>
-----------------------------------------------
-Copyright © 2026 Mongsion.All Rights Reserved.
-"""
-
 from decimal import Decimal
 from typing import Any, Literal
 
