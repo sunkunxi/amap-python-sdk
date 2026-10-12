@@ -3,7 +3,7 @@ name = "pyamap"
 version = "0.0.4"
 description = "高德地图Python SDK"
 authors = [
-    {name = "KunxiSun",email = "sunkunxi@mongsion.com"}
+    {name = "KunxiSun",email = "sunkunxi@qq.com"}
 ]
 license = {text = "MIT"}
 readme = "README.md"
