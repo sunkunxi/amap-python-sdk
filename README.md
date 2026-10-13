@@ -2,8 +2,8 @@
 
 [![Test](https://github.com/sunkunxi/amap-python-sdk/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/sunkunxi/amap-python-sdk/actions/workflows/test.yml)
 [![Coverage](https://codecov.io/gh/sunkunxi/amap-python-sdk/branch/main/graph/badge.svg)](https://codecov.io/gh/sunkunxi/amap-python-sdk)
-[![PyPI version](https://img.shields.io/pypi/v/amap-python-sdk)](https://pypi.org/project/amap-python-sdk/)
-![Python versions](https://img.shields.io/badge/python-3.10%2B-blue.svg)
+[![PyPI version](https://img.shields.io/pypi/v/amap-python-sdk?color=%2334D058&label=pypi%20package)](https://pypi.org/project/amap-python-sdk/)
+![Python versions](https://img.shields.io/pypi/pyversions/amap-python-sdk.svg?color=%2334D058)
 
 English | [简体中文](./doc/README.zh.md)
 
