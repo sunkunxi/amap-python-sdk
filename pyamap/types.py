@@ -10,8 +10,15 @@ T_Extensions = Literal["base", "all"]
 T_ShowFields = list[Literal["children", "business", "indoor", "navi", "photos"]]
 
 RequestMethods = Literal["POST", "GET", "PUT", "DELETE"]
+# v3 及以下接口的输出格式(json/xml)
+T_OutputFormat = Literal["json", "xml"]
+# v5 接口只支持 json
+T_OutputFormatV5 = Literal["json"]
+
 # 坐标:经度在前,纬度在后,小数点后最多 6 位
 Coordinate = tuple[str | Decimal, str | Decimal]
+# 矩形:左下、右上两个顶点
+Rectangle = tuple[Coordinate, Coordinate]
 
 
 _MAX_DECIMALS = 6
@@ -34,15 +41,13 @@ def _validate_one(value: str | Decimal, name: str) -> str:
     # Decimal('104.070000').as_tuple() -> exponent=-6(刚好 6 位)
     exponent: int = d.as_tuple().exponent  # type: ignore[assignment]
     if exponent < -_MAX_DECIMALS:
-        raise ValueError(
-            f"{name} 小数位超过 {_MAX_DECIMALS} 位: {value} (高德 API 限制)"
-        )
+        raise ValueError(f"{name} 小数位超过 {_MAX_DECIMALS} 位: {value} (高德 API 限制)")
 
     # 使用 :f 避免科学计数法(Decimal('1E+2') -> '100')
     return f"{d:f}"
 
 
-def format_coordinate(coord: Coordinate) -> str:
+def format_coordinate(coord: Coordinate, seq=",") -> str:
     """把 (lon, lat) 元组格式化为 'lon,lat' 字符串
 
     校验:
@@ -50,7 +55,7 @@ def format_coordinate(coord: Coordinate) -> str:
     - 字符串可被解析为 Decimal
     """
     lon, lat = coord
-    return f"{_validate_one(lon, 'longitude')},{_validate_one(lat, 'latitude')}"
+    return f"{_validate_one(lon, 'longitude')}{seq}{_validate_one(lat, 'latitude')}"
 
 
 def format_coordinates(
