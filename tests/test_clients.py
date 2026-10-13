@@ -1,8 +1,9 @@
 from unittest.mock import AsyncMock, Mock
 
 import pytest
+import requests
 
-from pyamap import base
+from pyamap import AmapAPIError, AmapTimeoutError, base
 from pyamap.aio import HTTPClient as AsyncHTTPClient
 from pyamap.amap import HTTPClient as SyncHTTPClient
 
@@ -10,8 +11,7 @@ from pyamap.amap import HTTPClient as SyncHTTPClient
 @pytest.mark.parametrize("method", ["get", "put", "delete", "post"])
 def test_sync_http_client_forwards_request_and_injects_key(monkeypatch, method):
     session = Mock()
-    session_method = getattr(session, method)
-    session_method.return_value.json.return_value = {"status": "1"}
+    session.request.return_value.json.return_value = {"status": "1"}
     monkeypatch.setattr("pyamap.amap.requests.Session", lambda: session)
     client = SyncHTTPClient("secret", "https://example.test")
     params = {"city": "510100", "citylimit": True, "disabled": False}
@@ -25,7 +25,8 @@ def test_sync_http_client_forwards_request_and_injects_key(monkeypatch, method):
     )
 
     assert result == {"status": "1"}
-    session_method.assert_called_once_with(
+    session.request.assert_called_once_with(
+        method.upper(),
         "https://example.test/v3/weather/weatherInfo",
         params={
             "city": "510100",
@@ -36,12 +37,12 @@ def test_sync_http_client_forwards_request_and_injects_key(monkeypatch, method):
         headers=headers,
         data="payload",
     )
-    session_method.return_value.json.assert_called_once_with()
+    session.request.return_value.json.assert_called_once_with()
 
 
 def test_sync_http_client_close_and_exceptions_propagate(monkeypatch):
     session = Mock()
-    session.get.side_effect = RuntimeError("transport failure")
+    session.request.side_effect = RuntimeError("transport failure")
     monkeypatch.setattr("pyamap.amap.requests.Session", lambda: session)
     client = SyncHTTPClient("key", "https://example.test")
 
@@ -50,6 +51,40 @@ def test_sync_http_client_close_and_exceptions_propagate(monkeypatch):
 
     client.close()
     session.close.assert_called_once_with()
+
+
+@pytest.mark.parametrize("method", ["get", "put", "delete", "post"])
+def test_sync_http_client_raises_amap_api_error(monkeypatch, method):
+    response = Mock()
+    response.json.return_value = {
+        "status": "0",
+        "info": "USERKEY_PLAT_NOMATCH",
+        "infocode": "10001",
+    }
+    session = Mock()
+    session.request.return_value = response
+    monkeypatch.setattr("pyamap.amap.requests.Session", lambda: session)
+    client = SyncHTTPClient("key", "https://example.test")
+
+    with pytest.raises(AmapAPIError) as exc_info:
+        getattr(client, method)("/path", params={})
+
+    assert exc_info.value.infocode == "10001"
+    assert exc_info.value.info == "USERKEY_PLAT_NOMATCH"
+    assert exc_info.value.response == response.json.return_value
+
+
+@pytest.mark.parametrize("method", ["get", "put", "delete", "post"])
+def test_sync_http_client_converts_request_timeouts(monkeypatch, method):
+    session = Mock()
+    session.request.side_effect = requests.exceptions.Timeout("slow")
+    monkeypatch.setattr("pyamap.amap.requests.Session", lambda: session)
+    client = SyncHTTPClient("key", "https://example.test")
+
+    with pytest.raises(AmapTimeoutError, match="Amap request timed out") as exc_info:
+        getattr(client, method)("/path", params={})
+
+    assert isinstance(exc_info.value.__cause__, requests.exceptions.Timeout)
 
 
 @pytest.mark.parametrize("method", ["get", "put", "delete", "post", "close"])
@@ -123,6 +158,43 @@ async def test_async_http_client_propagates_errors_and_closes(monkeypatch):
     session.close = Mock(return_value=_awaitable(None))
     await client.close()
     session.close.assert_called_once_with()
+
+
+@pytest.mark.asyncio
+async def test_async_http_client_raises_amap_api_error(monkeypatch):
+    response = Mock()
+    response.json = AsyncMock(
+        return_value={
+            "status": "0",
+            "info": "USERKEY_PLAT_NOMATCH",
+            "infocode": "10001",
+        }
+    )
+    session = Mock()
+    session.request = Mock(return_value=_awaitable(response))
+    monkeypatch.setattr("pyamap.aio.aiohttp.TCPConnector", lambda limit: None)
+    monkeypatch.setattr("pyamap.aio.aiohttp.ClientSession", lambda connector: session)
+    client = AsyncHTTPClient("key", "https://example.test", max_connector=1)
+
+    with pytest.raises(AmapAPIError) as exc_info:
+        await client.get("/path", params={})
+
+    assert exc_info.value.infocode == "10001"
+    assert exc_info.value.info == "USERKEY_PLAT_NOMATCH"
+
+
+@pytest.mark.asyncio
+async def test_async_http_client_converts_request_timeouts(monkeypatch):
+    session = Mock()
+    session.request = Mock(side_effect=_async_error(TimeoutError("slow")))
+    monkeypatch.setattr("pyamap.aio.aiohttp.TCPConnector", lambda limit: None)
+    monkeypatch.setattr("pyamap.aio.aiohttp.ClientSession", lambda connector: session)
+    client = AsyncHTTPClient("key", "https://example.test", max_connector=1)
+
+    with pytest.raises(AmapTimeoutError, match="Amap request timed out") as exc_info:
+        await client.get("/path", params={})
+
+    assert isinstance(exc_info.value.__cause__, TimeoutError)
 
 
 def _awaitable(value):

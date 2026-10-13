@@ -29,10 +29,9 @@ def api_key() -> str:
 
 
 def assert_api_success(operation: str, response: dict) -> None:
-    assert response.get("status") == "1", (
-        f"{operation} failed: info={response.get('info')!r}, "
-        f"infocode={response.get('infocode')!r}"
-    )
+    assert (
+        response.get("status") == "1"
+    ), f"{operation} failed: info={response.get('info')!r}, infocode={response.get('infocode')!r}"
 
 
 def test_all_sync_web_api_endpoints(api_key):
