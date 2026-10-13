@@ -1,7 +1,7 @@
-from typing import Any, Literal
+from typing import Any
 
 from pyamap import base
-from pyamap.types import T_Extensions
+from pyamap.types import T_Extensions, T_OutputFormat
 
 
 class District(base.ApiAgent[base.AmapResultT]):
@@ -22,7 +22,7 @@ class District(base.ApiAgent[base.AmapResultT]):
         page_size: int = 20,
         extensions: T_Extensions = "base",
         adcode: str | None = None,
-        output: Literal["json", "xml"] = "json",
+        output: T_OutputFormat = "json",
     ) -> base.AmapResultT:
         """列出行政区域
 

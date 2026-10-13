@@ -1,6 +1,7 @@
-from typing import Any, Literal
+from typing import Any
 
 from pyamap import base
+from pyamap.types import T_Extensions, T_OutputFormat
 
 
 class Weather(base.ApiAgent[base.AmapResultT]):
@@ -13,8 +14,8 @@ class Weather(base.ApiAgent[base.AmapResultT]):
         self,
         city: str,
         *,
-        extensions: Literal["base", "all"] | None = None,
-        output: Literal["json", "xml"] | None = None,
+        extensions: T_Extensions | None = None,
+        output: T_OutputFormat = "json",
     ) -> base.AmapResultT:
         """天气查询"""
 
