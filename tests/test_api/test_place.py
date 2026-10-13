@@ -68,7 +68,7 @@ def test_text_search_rejects_invalid_inputs(sync_client, kwargs):
 def test_around_search_formats_location_and_optional_radius(sync_client):
     amap, http = sync_client
 
-    Place(amap).arround(
+    Place(amap).around(
         "咖啡",
         location=("104.07", "30.66"),
         radius=5000,
@@ -92,7 +92,7 @@ def test_around_search_rejects_radius_out_of_range(sync_client, radius):
     amap, http = sync_client
 
     with pytest.raises(ValueError):
-        Place(amap).arround("coffee", location=("104", "30"), radius=radius)
+        Place(amap).around("coffee", location=("104", "30"), radius=radius)
 
     assert http.requests == []
 
@@ -137,7 +137,7 @@ async def test_place_endpoints_support_async_http_client(async_client):
     amap, http = async_client
 
     await Place(amap).text("coffee")
-    await Place(amap).arround("coffee", location=("104", "30"))
+    await Place(amap).around("coffee", location=("104", "30"))
     await Place(amap).polygon(("1", "1"), ("2", "2"), ("3", "3"))
     await Place(amap).detail("B001")
 
