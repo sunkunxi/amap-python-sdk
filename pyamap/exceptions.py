@@ -7,8 +7,8 @@ class AmapAPIError(AmapException):
 
     def __init__(self, response: dict[str, object]) -> None:
         self.response = response
-        self.info = _optional_string(response.get("info"))
-        self.infocode = _optional_string(response.get("infocode"))
+        self.info = response.get("info", None)
+        self.infocode = response.get("infocode", None)
 
         details = []
         if self.infocode is not None:
@@ -26,9 +26,3 @@ class AmapTimeoutError(AmapException):
     """A synchronous or asynchronous Amap request exceeded its timeout."""
 
     pass
-
-
-def _optional_string(value: object) -> str | None:
-    if value is None:
-        return None
-    return str(value)
