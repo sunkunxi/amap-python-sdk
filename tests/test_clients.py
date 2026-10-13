@@ -1,5 +1,7 @@
+import logging
 from unittest.mock import AsyncMock, Mock
 
+import aiohttp
 import pytest
 import requests
 
@@ -40,6 +42,24 @@ def test_sync_http_client_forwards_request_and_injects_key(monkeypatch, method):
     session.request.return_value.json.assert_called_once_with()
 
 
+def test_sync_http_client_logs_safe_success_details(caplog, monkeypatch):
+    session = Mock()
+    session.request.return_value.status_code = 200
+    session.request.return_value.json.return_value = {"status": "1"}
+    monkeypatch.setattr("pyamap.amap.requests.Session", lambda: session)
+    client = SyncHTTPClient("secret-api-key", "https://example.test")
+
+    with caplog.at_level(logging.DEBUG, logger="pyamap.amap"):
+        client.get("/v3/place/text", params={"keywords": "private place"})
+
+    assert "Amap request succeeded" in caplog.text
+    assert "/v3/place/text" in caplog.text
+    assert "status_code=200" in caplog.text
+    assert "duration_ms=" not in caplog.text
+    assert "secret-api-key" not in caplog.text
+    assert "private place" not in caplog.text
+
+
 def test_sync_http_client_close_and_exceptions_propagate(monkeypatch):
     session = Mock()
     session.request.side_effect = RuntimeError("transport failure")
@@ -53,8 +73,23 @@ def test_sync_http_client_close_and_exceptions_propagate(monkeypatch):
     session.close.assert_called_once_with()
 
 
+def test_sync_http_client_logs_connection_failures_without_exception_text(caplog, monkeypatch):
+    session = Mock()
+    session.request.side_effect = requests.exceptions.ConnectionError("private url")
+    monkeypatch.setattr("pyamap.amap.requests.Session", lambda: session)
+    client = SyncHTTPClient("key", "https://example.test")
+
+    with caplog.at_level(logging.WARNING, logger="pyamap.amap"):
+        with pytest.raises(requests.exceptions.ConnectionError, match="private url"):
+            client.get("/path", params={})
+
+    assert "Amap HTTP request failed" in caplog.text
+    assert "error_type=ConnectionError" in caplog.text
+    assert "private url" not in caplog.text
+
+
 @pytest.mark.parametrize("method", ["get", "put", "delete", "post"])
-def test_sync_http_client_raises_amap_api_error(monkeypatch, method):
+def test_sync_http_client_raises_amap_api_error(caplog, monkeypatch, method):
     response = Mock()
     response.json.return_value = {
         "status": "0",
@@ -66,12 +101,15 @@ def test_sync_http_client_raises_amap_api_error(monkeypatch, method):
     monkeypatch.setattr("pyamap.amap.requests.Session", lambda: session)
     client = SyncHTTPClient("key", "https://example.test")
 
-    with pytest.raises(AmapAPIError) as exc_info:
-        getattr(client, method)("/path", params={})
+    with caplog.at_level(logging.WARNING, logger="pyamap.amap"):
+        with pytest.raises(AmapAPIError) as exc_info:
+            getattr(client, method)("/path", params={})
 
     assert exc_info.value.infocode == "10001"
     assert exc_info.value.info == "USERKEY_PLAT_NOMATCH"
     assert exc_info.value.response == response.json.return_value
+    assert "infocode=10001" in caplog.text
+    assert "key" not in caplog.text
 
 
 @pytest.mark.parametrize("method", ["get", "put", "delete", "post"])
@@ -161,7 +199,26 @@ async def test_async_http_client_propagates_errors_and_closes(monkeypatch):
 
 
 @pytest.mark.asyncio
-async def test_async_http_client_raises_amap_api_error(monkeypatch):
+async def test_async_http_client_logs_connection_failures_without_exception_text(
+    caplog, monkeypatch
+):
+    session = Mock()
+    session.request = Mock(side_effect=_async_error(aiohttp.ClientError("private url")))
+    monkeypatch.setattr("pyamap.aio.aiohttp.TCPConnector", lambda limit: None)
+    monkeypatch.setattr("pyamap.aio.aiohttp.ClientSession", lambda connector: session)
+    client = AsyncHTTPClient("key", "https://example.test", max_connector=1)
+
+    with caplog.at_level(logging.WARNING, logger="pyamap.aio"):
+        with pytest.raises(aiohttp.ClientError, match="private url"):
+            await client.get("/path", params={})
+
+    assert "Amap HTTP request failed" in caplog.text
+    assert "error_type=ClientError" in caplog.text
+    assert "private url" not in caplog.text
+
+
+@pytest.mark.asyncio
+async def test_async_http_client_raises_amap_api_error(caplog, monkeypatch):
     response = Mock()
     response.json = AsyncMock(
         return_value={
@@ -176,11 +233,14 @@ async def test_async_http_client_raises_amap_api_error(monkeypatch):
     monkeypatch.setattr("pyamap.aio.aiohttp.ClientSession", lambda connector: session)
     client = AsyncHTTPClient("key", "https://example.test", max_connector=1)
 
-    with pytest.raises(AmapAPIError) as exc_info:
-        await client.get("/path", params={})
+    with caplog.at_level(logging.WARNING, logger="pyamap.aio"):
+        with pytest.raises(AmapAPIError) as exc_info:
+            await client.get("/path", params={})
 
     assert exc_info.value.infocode == "10001"
     assert exc_info.value.info == "USERKEY_PLAT_NOMATCH"
+    assert "infocode=10001" in caplog.text
+    assert "key" not in caplog.text
 
 
 @pytest.mark.asyncio
