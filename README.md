@@ -1,6 +1,13 @@
 # pyamap
 高德地图Python SDK
 
+<!--
+[![PyPI version](https://img.shields.io/pypi/v/pyamap)](https://pypi.org/project/pyamap/)
+-->
+[![Test](https://github.com/sunkunxi/pyamap/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/sunkunxi/pyamap/actions/workflows/test.yml)
+[![Coverage](https://codecov.io/gh/sunkunxi/pyamap/branch/main/graph/badge.svg)](https://codecov.io/gh/sunkunxi/pyamap)
+![Python versions](https://img.shields.io/badge/python-3.10%2B-blue.svg)
+
 1. web api对接
 2. aio支持
 3. 类型支持
