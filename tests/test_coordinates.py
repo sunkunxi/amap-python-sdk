@@ -38,6 +38,11 @@ class TestValidateOne:
     def test_zero(self):
         assert _validate_one("0", "longitude") == "0"
 
+    @pytest.mark.parametrize("value", ["NaN", "Infinity", "-Infinity"])
+    def test_non_finite_values_raise(self, value):
+        with pytest.raises(ValueError, match="有限数字"):
+            _validate_one(value, "longitude")
+
 
 class TestFormatCoordinate:
     def test_str_pair(self):
