@@ -1,3 +1,4 @@
+import asyncio
 from collections.abc import Awaitable
 
 import aiohttp
@@ -14,6 +15,7 @@ from pyamap.api.ip import Ip
 from pyamap.api.place import Place
 from pyamap.api.traffic import Traffic
 from pyamap.api.weather import Weather
+from pyamap.exceptions import AmapTimeoutError
 
 from .types import RequestMethods, T_Headers, T_Params
 
@@ -25,12 +27,6 @@ class HTTPClient(base.HTTPClient[Awaitable[base.AmapResult]]):
         self.connector = aiohttp.TCPConnector(limit=max_connector)
         self.session = aiohttp.ClientSession(connector=self.connector)
 
-    def _prepara_params(self, params: T_Params) -> T_Params:
-        params["key"] = self.api_key
-
-        # convert python bool to "true" or "false"
-        return {k: str(v).lower() if isinstance(v, bool) else v for k, v in params.items()}
-
     async def _request(
         self,
         method: RequestMethods,
@@ -41,9 +37,13 @@ class HTTPClient(base.HTTPClient[Awaitable[base.AmapResult]]):
         headers: T_Headers | None = None,
     ) -> base.AmapResult:
         url = self.url(path)
-        params = self._prepara_params(params)
-        res = await self.session.request(method, url, params=params, headers=headers, data=data)
-        return await res.json()
+        params = self._prepare_params(params)
+        try:
+            res = await self.session.request(method, url, params=params, headers=headers, data=data)
+            res.raise_for_status()
+            return self._validate_response(await res.json())
+        except (asyncio.TimeoutError, TimeoutError) as exc:
+            raise AmapTimeoutError("Amap request timed out") from exc
 
     async def get(
         self,
