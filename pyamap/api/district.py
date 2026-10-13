@@ -1,13 +1,16 @@
-from typing import Any, Literal
+from typing import Any
 
 from pyamap import base
-from pyamap.types import T_Extensions
+from pyamap.types import T_Extensions, T_OutputFormat
 
 
 class District(base.ApiAgent[base.AmapResultT]):
     """
-    行政区域
-    地址：https://lbs.amap.com/api/webservice/guide/api/district
+    行政区域查询是一类简单的 HTTP 接口，根据用户输入的搜索条件可以帮助用户快速的查找特定的行政区域信息。
+
+    例如: 中国>山东省>济南市>历下区>舜华路街道（国>省>市>区>街道）。
+
+    地址: https://lbs.amap.com/api/webservice/guide/api/district
     """
 
     def list(
@@ -19,7 +22,7 @@ class District(base.ApiAgent[base.AmapResultT]):
         page_size: int = 20,
         extensions: T_Extensions = "base",
         adcode: str | None = None,
-        output: Literal["json", "xml"] = "json",
+        output: T_OutputFormat = "json",
     ) -> base.AmapResultT:
         """列出行政区域
 

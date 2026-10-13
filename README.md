@@ -18,8 +18,12 @@ amap = Amap("<API_KEY>")
 
 # POI 2.0 API
 res = amap.place.text("keywords")
-res = amap.place.arround("成都市", longitude="116.407082", latitude="39.910464")
-res = amap.place.polygon(("116.407082", "39.910464"), ("117.407082", "40.910464"))
+res = amap.place.arround("成都市", location=("116.407082", "39.910464"))
+res = amap.place.polygon(
+    ("116.407082", "39.910464"),
+    ("117.407082", "40.910464"),
+    ("116.407082", "39.910464"),  # 闭合多边形首尾相同
+)
 res = amap.place.detail("POI_ID")
 
 # Weather
@@ -27,6 +31,7 @@ res = amap.weather.info("成都市")
 
 # District
 res = amap.district.list()
+
 ```
 ```python
 
@@ -37,8 +42,12 @@ amap = Amap("<API_KEY>")
 
 # POI 2.0 API
 res = await amap.place.text("keywords")
-res = await amap.place.arround("成都市", longitude="116.407082", latitude="39.910464")
-res = await amap.place.polygon(("116.407082", "39.910464"), ("117.407082", "40.910464"))
+res = await amap.place.arround("成都市", location=("116.407082", "39.910464"))
+res = await amap.place.polygon(
+    ("116.407082", "39.910464"),
+    ("117.407082", "40.910464"),
+    ("116.407082", "39.910464"),
+)
 res = await amap.place.detail("POI_ID")
 
 # Weather API
@@ -47,3 +56,18 @@ res = await amap.weather.info("成都市")
 # District
 res = await amap.district.list()
 ```
+
+## 已封装 API
+
+| Api | 方法 | 高德端点 |
+|-------|------|----------|
+| `place` | `text` / `around` / `polygon` / `detail` | `/v5/place/*` |
+| `weather` | `info` | `/v3/weather/weatherInfo` |
+| `district` | `list` | `/v3/config/district` |
+| `georegeo` | `geo` / `regeo` | `/v3/geocode/*` |
+| `direction` | `walking` / `transit` / `driving` / `bicycling` / `electrobike` | `/v5/direction/*` (路径规划 2.0) |
+| `distance` | `measure` | `/v3/distance` |
+| `coordinate` | `convert` | `/v3/assistant/coordinate/convert` |
+| `inputtips` | `query` | `/v3/assistant/inputtips` |
+| `ip` | `locate` | `/v3/ip` |
+| `traffic` | `circle` / `rectangle` / `road` | `/v3/traffic/status/*` |

@@ -1,9 +1,8 @@
 from collections.abc import Callable
-from decimal import Decimal
 from typing import Any, Literal
 
 from pyamap import base
-from pyamap.types import T_ShowFields
+from pyamap.types import Coordinate, T_OutputFormatV5, T_ShowFields, format_coordinates
 
 
 class Place(base.ApiAgent[base.AmapResultT]):
@@ -22,7 +21,7 @@ class Place(base.ApiAgent[base.AmapResultT]):
         page_size: int | None = None,
         page_num: int | None = None,
         sig: str | None = None,
-        output: Literal["json"] | None = None,
+        output: T_OutputFormatV5 = "json",
         callback: Callable | None = None,
     ) -> dict[str, Any]:
         params: dict[str, Any] = {}
@@ -77,7 +76,7 @@ class Place(base.ApiAgent[base.AmapResultT]):
         page_size: int | None = None,
         page_num: int | None = None,
         sig: str | None = None,
-        output: Literal["json"] | None = None,
+        output: T_OutputFormatV5 = "json",
     ) -> base.AmapResultT:
         """关键字搜索"""
 
@@ -99,8 +98,7 @@ class Place(base.ApiAgent[base.AmapResultT]):
         self,
         keywords: str,
         *,
-        longitude: str | Decimal,
-        latitude: str | Decimal,
+        location: Coordinate,
         radius: int | None = None,
         types: list[str] | None = None,
         sortrule: Literal["distance", "weight"] | None = None,
@@ -110,9 +108,16 @@ class Place(base.ApiAgent[base.AmapResultT]):
         page_size: int | None = None,
         page_num: int | None = None,
         sig: str | None = None,
-        output: Literal["json"] | None = None,
+        output: T_OutputFormatV5 = "json",
     ) -> base.AmapResultT:
-        """周边搜索"""
+        """周边搜索
+
+        Args:
+            keywords: 搜索关键词
+            location: 中心点 (lon, lat),小数点后最多 6 位
+            radius: 搜索半径,0~5000 米
+            ...
+        """
 
         params = self._init_params(
             keywords=keywords,
@@ -126,10 +131,7 @@ class Place(base.ApiAgent[base.AmapResultT]):
             output=output,
         )
 
-        if not longitude or not latitude:
-            raise ValueError("longitude and latitude are both required")
-
-        params["location"] = f"{longitude},{latitude}"
+        params["location"] = format_coordinates([location])
 
         if region is not None:
             params["region"] = region
@@ -146,16 +148,25 @@ class Place(base.ApiAgent[base.AmapResultT]):
 
     def polygon(
         self,
-        *coordinates: tuple[str, str],
+        *coordinates: Coordinate,
         keywords: str | None = None,
         types: list[str] | None = None,
         show_fields: T_ShowFields | None = None,
         page_size: int | None = None,
         page_num: int | None = None,
         sig: str | None = None,
-        output: Literal["json"] | None = None,
+        output: T_OutputFormatV5 = "json",
     ) -> base.AmapResultT:
-        """多边形区域搜索"""
+        """多边形区域搜索
+
+        Args:
+            *coordinates: 顶点坐标,至少 3 个,首尾坐标对需相同(闭合多边形)
+            keywords: 搜索关键词
+            types: POI 类型
+        """
+
+        if len(coordinates) < 3:
+            raise ValueError("at least 3 coordinates for polygon (closed ring)")
 
         params = self._init_params(
             keywords=keywords,
@@ -167,12 +178,7 @@ class Place(base.ApiAgent[base.AmapResultT]):
             output=output,
         )
 
-        if len(coordinates) < 2:
-            raise ValueError("at least 2 coordinates")
-
-        params["polygon"] = "|".join(
-            [f"{logitude},{latitude}," for logitude, latitude in coordinates]
-        )
+        params["polygon"] = format_coordinates(coordinates, sep="|")
 
         return self.amap.http.get("/v5/place/polygon", params=params)
 
@@ -181,7 +187,7 @@ class Place(base.ApiAgent[base.AmapResultT]):
         *ids: str,
         show_fields: T_ShowFields | None = None,
         sig: str | None = None,
-        output: Literal["json"] | None = None,
+        output: T_OutputFormatV5 = "json",
     ) -> base.AmapResultT:
         """ID搜索"""
 
