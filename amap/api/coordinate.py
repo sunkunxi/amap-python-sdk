@@ -8,9 +8,9 @@
 from collections.abc import Sequence
 from typing import Any, Literal
 
-from pyamap import base
-from pyamap.types import Coordinate as _Coord
-from pyamap.types import T_OutputFormat, format_coordinates
+from amap import base
+from amap.types import Coordinate as _Coord
+from amap.types import T_OutputFormat, format_coordinates
 
 T_CoordSystem = Literal["gps", "mapbar", "baidu", "autonavi"]
 """原坐标系:gps-mapbar-baidu-autonavi(不转换)"""

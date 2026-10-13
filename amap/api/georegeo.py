@@ -10,8 +10,8 @@ Copyright © 2026 Mongsion.All Rights Reserved.
 
 from typing import Any, Literal
 
-from pyamap import base
-from pyamap.types import Coordinate, format_coordinate
+from amap import base
+from amap.types import Coordinate, format_coordinate
 
 
 class Georegeo(base.ApiAgent[base.AmapResultT]):

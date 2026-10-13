@@ -12,8 +12,8 @@
 from collections.abc import Sequence
 from typing import Any, Literal
 
-from pyamap import base
-from pyamap.types import Coordinate, T_OutputFormatV5, format_coordinate, format_coordinates
+from amap import base
+from amap.types import Coordinate, T_OutputFormatV5, format_coordinate, format_coordinates
 
 # ---------------------------------------------------------------- #
 # 公共 show_fields 字面量

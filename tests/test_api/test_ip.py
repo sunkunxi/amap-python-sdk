@@ -1,6 +1,6 @@
 import pytest
 
-from pyamap.api.ip import Ip
+from amap.api.ip import Ip
 
 
 def test_locate_omits_ip_by_default(sync_client):

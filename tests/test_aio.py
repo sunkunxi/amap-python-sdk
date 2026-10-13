@@ -3,13 +3,13 @@ from unittest.mock import Mock
 
 import pytest
 
-from pyamap.aio import Amap
+from amap.aio import Amap
 
 
 def test_async_amap_requires_initialization_and_can_be_awaited(monkeypatch):
     http = Mock()
     factory = Mock(return_value=http)
-    monkeypatch.setattr("pyamap.aio.HTTPClient", factory)
+    monkeypatch.setattr("amap.aio.HTTPClient", factory)
     amap = Amap("key", max_connector=7)
 
     with pytest.raises(RuntimeError, match="not initialized"):
@@ -30,7 +30,7 @@ def test_async_amap_requires_initialization_and_can_be_awaited(monkeypatch):
 def test_async_context_closes_client_even_when_body_raises(monkeypatch):
     http = Mock()
     http.close = Mock(return_value=_awaitable(None))
-    monkeypatch.setattr("pyamap.aio.HTTPClient", lambda *args, **kwargs: http)
+    monkeypatch.setattr("amap.aio.HTTPClient", lambda *args, **kwargs: http)
     amap = Amap("key")
 
     async def raise_inside_context():

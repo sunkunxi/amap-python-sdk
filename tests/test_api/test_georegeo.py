@@ -1,6 +1,6 @@
 import pytest
 
-from pyamap.api.georegeo import Georegeo
+from amap.api.georegeo import Georegeo
 
 
 def test_geo_includes_address_and_optional_city(sync_client):

@@ -6,14 +6,16 @@ on:
       - published
 
 permissions:
-  id-token: write
   contents: read
 
 jobs:
   publish:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     environment: pypi
+    permissions:
+      contents: read
+      id-token: write
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
@@ -28,6 +30,10 @@ jobs:
         with:
           version: "0.13.0"
           enable-cache: false
+      - name: Install project and test dependencies
+        run: uv sync --locked --group test
+      - name: Run tests
+        run: uv run --no-sync pytest
       - name: Build distribution
         run: uv build
       - name: Publish to PyPI
