@@ -1,23 +1,23 @@
-# pyamap
+# amap-python-sdk
 
-[![Test](https://github.com/sunkunxi/pyamap/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/sunkunxi/pyamap/actions/workflows/test.yml)
-[![Coverage](https://codecov.io/gh/sunkunxi/pyamap/branch/main/graph/badge.svg)](https://codecov.io/gh/sunkunxi/pyamap)
+[![Test](https://github.com/sunkunxi/amap-python-sdk/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/sunkunxi/amap-python-sdk/actions/workflows/test.yml)
+[![Coverage](https://codecov.io/gh/sunkunxi/amap-python-sdk/branch/main/graph/badge.svg)](https://codecov.io/gh/sunkunxi/amap-python-sdk)
 
 [English](../README.md) | 简体中文
 
 ## 项目简介
 
-pyamap 是一个用于调用[高德地图 Web 服务 API](https://lbs.amap.com/api/webservice/summary)的 Python 客户端。提供适合常规使用的同步客户端，以及面向 asyncio 应用的异步客户端。
+amap 是一个用于调用[高德地图 Web 服务 API](https://lbs.amap.com/api/webservice/summary)的 Python 客户端。提供适合常规使用的同步客户端，以及面向 asyncio 应用的异步客户端。
 
 目前封装了 POI 检索、天气、行政区划、地理编码、路径规划、距离测量、坐标转换、输入提示、IP 定位和交通态势等 API。服务可用性、权限要求和调用限制请以高德官方文档为准。
 
 ## 安装
 
 ```bash
-pip install pyamap
+pip install amap-python-sdk
 ```
 
-支持 Python 3.10 及以上版本。安装时会一并安装 HTTP 客户端依赖 `requests` 和 `aiohttp`。
+PyPI 分发包名称为 `amap-python-sdk`，Python 导入包名仍为 `amap`。支持 Python 3.10 及以上版本，安装时会一并安装 HTTP 客户端依赖 `requests` 和 `aiohttp`。
 
 ## API Key
 
@@ -34,7 +34,7 @@ export AMAP_API_KEY="你的 API Key"
 ```python
 import os
 
-from pyamap import Amap
+from amap import Amap
 
 amap = Amap(os.environ["AMAP_API_KEY"])
 try:
@@ -83,13 +83,13 @@ finally:
 
 ## 异步用法
 
-`pyamap.aio.Amap` 提供基于 aiohttp 的 asyncio 客户端，服务方法与同步客户端保持对应。
+`amap.aio.Amap` 提供基于 aiohttp 的 asyncio 客户端，服务方法与同步客户端保持对应。
 
 ```python
 import asyncio
 import os
 
-from pyamap.aio import Amap
+from amap.aio import Amap
 
 
 async def main():
@@ -103,10 +103,10 @@ asyncio.run(main())
 
 ## 错误处理
 
-当高德返回 JSON 响应且 `"status": "0"` 时，客户端会抛出 `pyamap.exceptions.AmapAPIError`。异常对象提供原始响应、`info` 和 `infocode`：
+当高德返回 JSON 响应且 `"status": "0"` 时，客户端会抛出 `amap.exceptions.AmapAPIError`。异常对象提供原始响应、`info` 和 `infocode`：
 
 ```python
-from pyamap.exceptions import AmapAPIError
+from amap.exceptions import AmapAPIError
 
 try:
     result = amap.place.text("咖啡")
@@ -115,11 +115,11 @@ except AmapAPIError as exc:
     print(exc.response)
 ```
 
-SDK 会保留高德返回的 `infocode`，不会根据错误码数字前缀猜测具体含义。请查阅[高德官方错误码说明](https://lbs.amap.com/api/webservice/guide/tools/info)及对应 API 文档。底层 HTTP 客户端报告请求超时时，SDK 会抛出 `pyamap.exceptions.AmpTimeoutError`；其他网络和 HTTP 传输异常仍由 `requests` 或 `aiohttp` 抛出。
+SDK 会保留高德返回的 `infocode`，不会根据错误码数字前缀猜测具体含义。请查阅[高德官方错误码说明](https://lbs.amap.com/api/webservice/guide/tools/info)及对应 API 文档。底层 HTTP 客户端报告请求超时时，SDK 会抛出 `amap.exceptions.AmpTimeoutError`；其他网络和 HTTP 传输异常仍由 `requests` 或 `aiohttp` 抛出。
 
 ## 日志
 
-pyamap 使用 Python 标准库 `logging`，不会替应用配置 handler 或日志级别。成功请求以 `DEBUG` 级别记录；API、HTTP 和超时错误以 `WARNING` 级别记录。日志会包含端点和必要的诊断状态，但不会记录 API Key、请求参数或响应正文。
+amap 使用 Python 标准库 `logging`，不会替应用配置 handler 或日志级别。成功请求以 `DEBUG` 级别记录；API、HTTP 和超时错误以 `WARNING` 级别记录。日志会包含端点和必要的诊断状态，但不会记录 API Key、请求参数或响应正文。
 
 需要查看请求成功记录时，可在应用中自行配置日志：
 
@@ -147,6 +147,10 @@ logging.basicConfig(level=logging.DEBUG)
 4. 提交 Pull Request，并简要说明改动内容。
 
 行为变更请同时补充或更新测试，并遵循项目现有的格式和类型标注规范。
+
+## 发布
+
+发布 GitHub Release 后，GitHub Actions 会运行测试、构建分发包并通过 Trusted Publishing 上传到 PyPI。需要在 PyPI 项目 `amap-python-sdk` 配置 Trusted Publisher：仓库所有者 `sunkunxi`、仓库名 `amap-python-sdk`、工作流文件名 `publish.yml`、GitHub environment `pypi`。
 
 ## 许可证
 

@@ -1,6 +1,6 @@
 import pytest
 
-from pyamap.api.weather import Weather
+from amap.api.weather import Weather
 
 
 def test_info_sends_city_and_default_output(sync_client):

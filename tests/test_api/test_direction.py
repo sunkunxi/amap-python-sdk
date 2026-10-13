@@ -1,6 +1,6 @@
 import pytest
 
-from pyamap.api.direction import Direction
+from amap.api.direction import Direction
 
 
 def test_walking_formats_coordinates_and_fields(sync_client):

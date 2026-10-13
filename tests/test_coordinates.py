@@ -4,7 +4,7 @@ from decimal import Decimal
 
 import pytest
 
-from pyamap.types import _validate_one, format_coordinate, format_coordinates
+from amap.types import _validate_one, format_coordinate, format_coordinates
 
 
 class TestValidateOne:

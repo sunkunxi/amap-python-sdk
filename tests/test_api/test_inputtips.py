@@ -1,6 +1,6 @@
 import pytest
 
-from pyamap.api.inputtips import InputTips
+from amap.api.inputtips import InputTips
 
 
 def test_query_uses_keyword_and_default_values(sync_client):

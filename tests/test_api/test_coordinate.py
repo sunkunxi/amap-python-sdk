@@ -1,7 +1,7 @@
 import pytest
 
-from pyamap.api.coordinate import Coordinate
-from pyamap.types import Coordinate as CoordinatePair
+from amap.api.coordinate import Coordinate
+from amap.types import Coordinate as CoordinatePair
 
 
 def test_convert_formats_locations_and_optional_params(sync_client):

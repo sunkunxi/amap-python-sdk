@@ -1,6 +1,6 @@
 import pytest
 
-from pyamap.api.district import District
+from amap.api.district import District
 
 
 def test_list_uses_documented_defaults(sync_client):
