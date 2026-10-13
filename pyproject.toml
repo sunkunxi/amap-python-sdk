@@ -1,11 +1,21 @@
 [project]
 name = "amap-python-sdk"
-version = "0.1.3"
+version = "0.1.4"
 description = "A Python SDK for the Amap Web Service APIs"
 authors = [{ name = "KunxiSun", email = "sunkunxi@qq.com" }]
 license = { text = "MIT" }
 readme = "README.md"
 requires-python = ">=3.10,<4.0"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: 3.15",
+]
 urls = { Homepage = "https://github.com/sunkunxi/amap-python-sdk", Repository = "https://github.com/sunkunxi/amap-python-sdk" }
 dependencies = [
     "aiohttp (>=3.12.15,<4.0.0)",
