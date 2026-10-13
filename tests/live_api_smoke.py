@@ -4,8 +4,8 @@ import os
 
 import pytest
 
-from pyamap.amap import Amap
 from pyamap.aio import Amap as AsyncAmap
+from pyamap.amap import Amap
 
 pytestmark = pytest.mark.integration
 
@@ -54,9 +54,7 @@ def test_all_sync_web_api_endpoints(api_key):
             "inputtips.query": amap.inputtips.query("天安门", city="北京"),
             "ip.locate": amap.ip.locate("114.114.114.114"),
             "place.text": amap.place.text("天安门", region="北京市"),
-            "place.arround": amap.place.arround(
-                "天安门", location=ORIGIN, radius=1000
-            ),
+            "place.around": amap.place.around("天安门", location=ORIGIN, radius=1000),
             "place.polygon": amap.place.polygon(*POLYGON, keywords="天安门"),
             "traffic.circle": amap.traffic.circle(4, ORIGIN, radius=1000),
             "traffic.rectangle": amap.traffic.rectangle(
@@ -89,21 +87,15 @@ async def test_all_async_web_api_endpoints(api_key):
             ),
             "direction.driving": await amap.direction.driving(ORIGIN, DESTINATION),
             "direction.bicycling": await amap.direction.bicycling(ORIGIN, DESTINATION),
-            "direction.electrobike": await amap.direction.electrobike(
-                ORIGIN, DESTINATION
-            ),
+            "direction.electrobike": await amap.direction.electrobike(ORIGIN, DESTINATION),
             "distance.measure": await amap.distance.measure([ORIGIN], DESTINATION),
             "district.list": await amap.district.list("天安门"),
-            "georegeo.geo": await amap.georegeo.geo(
-                "北京市东城区天安门广场", city="北京"
-            ),
+            "georegeo.geo": await amap.georegeo.geo("北京市东城区天安门广场", city="北京"),
             "georegeo.regeo": await amap.georegeo.regeo(ORIGIN),
             "inputtips.query": await amap.inputtips.query("天安门", city="北京"),
             "ip.locate": await amap.ip.locate("114.114.114.114"),
             "place.text": await amap.place.text("天安门", region="北京市"),
-            "place.arround": await amap.place.arround(
-                "天安门", location=ORIGIN, radius=1000
-            ),
+            "place.around": await amap.place.around("天安门", location=ORIGIN, radius=1000),
             "place.polygon": await amap.place.polygon(*POLYGON, keywords="天安门"),
             "traffic.circle": await amap.traffic.circle(4, ORIGIN, radius=1000),
             "traffic.rectangle": await amap.traffic.rectangle(
