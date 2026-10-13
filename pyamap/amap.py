@@ -11,8 +11,9 @@ from pyamap.api.ip import Ip
 from pyamap.api.place import Place
 from pyamap.api.traffic import Traffic
 from pyamap.api.weather import Weather
+from pyamap.exceptions import AmapTimeoutError
 
-from .types import T_Headers, T_Params
+from .types import RequestMethods, T_Headers, T_Params
 
 
 class HTTPClient(base.HTTPClient[base.AmapResult]):
@@ -20,9 +21,23 @@ class HTTPClient(base.HTTPClient[base.AmapResult]):
         super().__init__(*args, **kwargs)
         self.session = requests.Session()
 
-    def _prepare_params(self, params: T_Params) -> T_Params:
-        params["key"] = self.api_key
-        return {k: str(v).lower() if isinstance(v, bool) else v for k, v in params.items()}
+    def _request(
+        self,
+        method: RequestMethods,
+        *,
+        path: str,
+        params: T_Params,
+        data: str | None = None,
+        headers: T_Headers | None = None,
+    ) -> base.AmapResult:
+        url = self.url(path)
+        params = self._prepare_params(params)
+        try:
+            res = self.session.request(method, url, params=params, headers=headers, data=data)
+        except requests.exceptions.Timeout as exc:
+            raise AmapTimeoutError("Amap request timed out") from exc
+        res.raise_for_status()
+        return self._validate_response(res.json())
 
     def get(
         self,
@@ -32,10 +47,7 @@ class HTTPClient(base.HTTPClient[base.AmapResult]):
         data: str | None = None,
         headers: T_Headers | None = None,
     ) -> base.AmapResult:
-        url = self.url(path)
-        params = self._prepare_params(params)
-        res = self.session.get(url, params=params, headers=headers, data=data)
-        return res.json()
+        return self._request("GET", path=path, params=params, data=data, headers=headers)
 
     def put(
         self,
@@ -45,10 +57,7 @@ class HTTPClient(base.HTTPClient[base.AmapResult]):
         data: str | None = None,
         headers: T_Headers | None = None,
     ) -> base.AmapResult:
-        url = self.url(path)
-        params = self._prepare_params(params)
-        res = self.session.put(url, params=params, headers=headers, data=data)
-        return res.json()
+        return self._request("PUT", path=path, params=params, data=data, headers=headers)
 
     def delete(
         self,
@@ -58,10 +67,7 @@ class HTTPClient(base.HTTPClient[base.AmapResult]):
         data: str | None = None,
         headers: T_Headers | None = None,
     ) -> base.AmapResult:
-        url = self.url(path)
-        params = self._prepare_params(params)
-        res = self.session.delete(url, params=params, headers=headers, data=data)
-        return res.json()
+        return self._request("DELETE", path=path, params=params, data=data, headers=headers)
 
     def post(
         self,
@@ -71,10 +77,7 @@ class HTTPClient(base.HTTPClient[base.AmapResult]):
         data: str | None = None,
         headers: T_Headers | None = None,
     ) -> base.AmapResult:
-        url = self.url(path)
-        params = self._prepare_params(params)
-        res = self.session.post(url, params=params, headers=headers, data=data)
-        return res.json()
+        return self._request("POST", path=path, params=params, data=data, headers=headers)
 
     def close(self) -> None:
         self.session.close()
