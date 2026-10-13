@@ -1,20 +1,27 @@
-from pyamap.amap import HTTPClient
-from pyamap.api.district import District
-from pyamap.api.georegeo import Georegeo
-from pyamap.api.place import Place
-from pyamap.api.weather import Weather
+from unittest.mock import Mock
+
+from pyamap.amap import Amap as SyncAmap
 
 
-def test_amap_init(amap):
-    assert amap
+def test_sync_amap_initializes_all_agents_and_closes_session(monkeypatch):
+    session = Mock()
+    monkeypatch.setattr("pyamap.amap.requests.Session", lambda: session)
 
+    amap = SyncAmap("key")
 
-def test_amap_http_client(amap):
-    assert amap.http and isinstance(amap.http, HTTPClient)
-
-
-def test_amap_api_agent(amap):
-    assert amap.place and isinstance(amap.place, Place)
-    assert amap.weather and isinstance(amap.weather, Weather)
-    assert amap.district and isinstance(amap.district, District)
-    assert amap.georegeo and isinstance(amap.georegeo, Georegeo)
+    for name in (
+        "place",
+        "weather",
+        "district",
+        "georegeo",
+        "direction",
+        "distance",
+        "coordinate",
+        "inputtips",
+        "ip",
+        "traffic",
+    ):
+        assert getattr(amap, name).amap is amap
+    assert amap.http.api_key == "key"
+    amap.close()
+    session.close.assert_called_once_with()

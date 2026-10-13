@@ -20,6 +20,10 @@ class HTTPClient(base.HTTPClient[base.AmapResult]):
         super().__init__(*args, **kwargs)
         self.session = requests.Session()
 
+    def _prepare_params(self, params: T_Params) -> T_Params:
+        params["key"] = self.api_key
+        return {k: str(v).lower() if isinstance(v, bool) else v for k, v in params.items()}
+
     def get(
         self,
         path: str,
@@ -29,7 +33,7 @@ class HTTPClient(base.HTTPClient[base.AmapResult]):
         headers: T_Headers | None = None,
     ) -> base.AmapResult:
         url = self.url(path)
-        params["key"] = self.api_key
+        params = self._prepare_params(params)
         res = self.session.get(url, params=params, headers=headers, data=data)
         return res.json()
 
@@ -42,7 +46,7 @@ class HTTPClient(base.HTTPClient[base.AmapResult]):
         headers: T_Headers | None = None,
     ) -> base.AmapResult:
         url = self.url(path)
-        params["key"] = self.api_key
+        params = self._prepare_params(params)
         res = self.session.put(url, params=params, headers=headers, data=data)
         return res.json()
 
@@ -55,7 +59,7 @@ class HTTPClient(base.HTTPClient[base.AmapResult]):
         headers: T_Headers | None = None,
     ) -> base.AmapResult:
         url = self.url(path)
-        params["key"] = self.api_key
+        params = self._prepare_params(params)
         res = self.session.delete(url, params=params, headers=headers, data=data)
         return res.json()
 
@@ -68,7 +72,7 @@ class HTTPClient(base.HTTPClient[base.AmapResult]):
         headers: T_Headers | None = None,
     ) -> base.AmapResult:
         url = self.url(path)
-        params["key"] = self.api_key
+        params = self._prepare_params(params)
         res = self.session.post(url, params=params, headers=headers, data=data)
         return res.json()
 

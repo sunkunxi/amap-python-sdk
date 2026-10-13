@@ -81,7 +81,7 @@ class Georegeo(base.ApiAgent[base.AmapResultT]):
         params["location"] = format_coordinate(location)
 
         if poitype is not None:
-            params["poitype"] = poitype
+            params["poitype"] = "|".join(poitype)
 
         if radius is not None:
             if radius > 3000 or radius < 0:
