@@ -1,4 +1,6 @@
 import asyncio
+import json
+import logging
 from collections.abc import Awaitable
 
 import aiohttp
@@ -15,9 +17,11 @@ from pyamap.api.ip import Ip
 from pyamap.api.place import Place
 from pyamap.api.traffic import Traffic
 from pyamap.api.weather import Weather
-from pyamap.exceptions import AmapTimeoutError
+from pyamap.exceptions import AmapAPIError, AmapTimeoutError
 
 from .types import RequestMethods, T_Headers, T_Params
+
+logger = logging.getLogger(__name__)
 
 
 class HTTPClient(base.HTTPClient[Awaitable[base.AmapResult]]):
@@ -41,9 +45,34 @@ class HTTPClient(base.HTTPClient[Awaitable[base.AmapResult]]):
         try:
             res = await self.session.request(method, url, params=params, headers=headers, data=data)
             res.raise_for_status()
-            return self._validate_response(await res.json())
+            result = self._validate_response(await res.json())
         except (asyncio.TimeoutError, TimeoutError) as exc:
+            logger.warning("Amap request timed out method=%s path=%s", method, path)
             raise AmapTimeoutError("Amap request timed out") from exc
+        except (aiohttp.ClientError, json.JSONDecodeError) as exc:
+            logger.warning(
+                "Amap HTTP request failed method=%s path=%s error_type=%s",
+                method,
+                path,
+                type(exc).__name__,
+            )
+            raise
+        except AmapAPIError as exc:
+            logger.warning(
+                "Amap API request failed method=%s path=%s infocode=%s",
+                method,
+                path,
+                exc.infocode,
+            )
+            raise
+
+        logger.debug(
+            "Amap request succeeded method=%s path=%s status_code=%s",
+            method,
+            path,
+            res.status,
+        )
+        return result
 
     async def get(
         self,
@@ -86,6 +115,7 @@ class HTTPClient(base.HTTPClient[Awaitable[base.AmapResult]]):
         return await self._request("POST", path=path, params=params, headers=headers, data=data)
 
     async def close(self) -> None:
+        logger.debug("Closing asynchronous Amap HTTP client")
         await self.session.close()
 
 

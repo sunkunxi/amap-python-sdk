@@ -117,6 +117,18 @@ except AmapAPIError as exc:
 
 SDK 会保留高德返回的 `infocode`，不会根据错误码数字前缀猜测具体含义。请查阅[高德官方错误码说明](https://lbs.amap.com/api/webservice/guide/tools/info)及对应 API 文档。底层 HTTP 客户端报告请求超时时，SDK 会抛出 `pyamap.exceptions.AmpTimeoutError`；其他网络和 HTTP 传输异常仍由 `requests` 或 `aiohttp` 抛出。
 
+## 日志
+
+pyamap 使用 Python 标准库 `logging`，不会替应用配置 handler 或日志级别。成功请求以 `DEBUG` 级别记录；API、HTTP 和超时错误以 `WARNING` 级别记录。日志会包含端点和必要的诊断状态，但不会记录 API Key、请求参数或响应正文。
+
+需要查看请求成功记录时，可在应用中自行配置日志：
+
+```python
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
+```
+
 ## 运行环境
 
 - Python `>=3.10,<4.0`

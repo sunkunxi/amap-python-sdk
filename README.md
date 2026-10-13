@@ -118,6 +118,18 @@ except AmapAPIError as exc:
 
 The SDK preserves Amap's `infocode` instead of guessing its meaning from a numeric prefix. Check the [official Amap error-code reference](https://lbs.amap.com/api/webservice/guide/tools/info) and the documentation for the specific API. When the underlying HTTP library reports a request timeout, the client raises `pyamap.exceptions.AmpTimeoutError`; other network and HTTP transport errors are raised by `requests` or `aiohttp`.
 
+## Logging
+
+pyamap uses Python's standard `logging` module and does not configure handlers or log levels for your application. Successful requests are logged at `DEBUG`; API, HTTP, and timeout failures are logged at `WARNING`. Log messages include the endpoint and diagnostic status, but omit API keys, request parameters, and response bodies.
+
+Configure logging in your application when needed:
+
+```python
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
+```
+
 ## Requirements
 
 - Python `>=3.10,<4.0`
