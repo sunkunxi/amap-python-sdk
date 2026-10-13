@@ -1,9 +1,15 @@
 import requests
 
 from pyamap import base
+from pyamap.api.coordinate import Coordinate
+from pyamap.api.direction import Direction
+from pyamap.api.distance import Distance
 from pyamap.api.district import District
 from pyamap.api.georegeo import Georegeo
+from pyamap.api.inputtips import InputTips
+from pyamap.api.ip import Ip
 from pyamap.api.place import Place
+from pyamap.api.traffic import Traffic
 from pyamap.api.weather import Weather
 
 from .types import T_Headers, T_Params
@@ -78,6 +84,12 @@ class Amap(base.Amap[base.AmapResult]):
         self.weather = Weather(self)
         self.district = District(self)
         self.georegeo = Georegeo(self)
+        self.direction = Direction(self)
+        self.distance = Distance(self)
+        self.coordinate = Coordinate(self)
+        self.inputtips = InputTips(self)
+        self.ip = Ip(self)
+        self.traffic = Traffic(self)
 
         self._http = HTTPClient(self.api_key, self.BASE_URL)
 
