@@ -1,7 +1,4 @@
 """
-
-
-
 创建日期: 2026-01-21 10:33:55 Wednesday
 创建人: 孙堃曦 Kunxi Sun <sunkunxi@mongsion.com>
 -----
@@ -11,10 +8,10 @@
 Copyright © 2026 Mongsion.All Rights Reserved.
 """
 
-from decimal import Decimal
 from typing import Any, Literal
 
 from pyamap import base
+from pyamap.types import Coordinate, format_coordinate
 
 
 class Georegeo(base.ApiAgent[base.AmapResultT]):
@@ -50,8 +47,7 @@ class Georegeo(base.ApiAgent[base.AmapResultT]):
 
     def regeo(
         self,
-        longitude: str | Decimal,
-        latitude: str | Decimal,
+        location: Coordinate,
         *,
         poitype: list[str] | None = None,
         radius: int | None = None,
@@ -62,8 +58,7 @@ class Georegeo(base.ApiAgent[base.AmapResultT]):
         """逆地理编码 API 服务地址
 
         Args:
-            longitude (str | Decimal): 经度
-            latitude (str | Decimal): 纬度
+            location: 经纬度坐标 (lon, lat),小数点后最多 6 位
             poitype (list[str] | None, optional): 返回附近 POI 类型
                 以下内容需要 extensions 参数为 all 时才生效.
                 逆地理编码在进行坐标解析之后不仅可以返回地址描述,也可以返回经纬度附近符合限定要求的 POI 内容（在 extensions 字段值为 all 时才会返回 POI 内容）.设置 POI 类型参数相当于为上述操作限定要求.参数仅支持传入 POI TYPECODE,可以传入多个 POI TYPECODE,相互之间用“|”分隔.
@@ -77,13 +72,13 @@ class Georegeo(base.ApiAgent[base.AmapResultT]):
                 以下内容需要 extensions 参数为 all 时才生效.
                 homeorcorp 参数的设置可以影响召回 POI 内容的排序策略,目前提供三个可选参数:
                 0:不对召回的排序策略进行干扰.
-                1:综合大数据分析将居家相关的 POI 内容优先返回,即优化返回结果中 pois 字段的poi 顺序.
-                2:综合大数据分析将公司相关的 POI 内容优先返回,即优化返回结果中 pois 字段的poi 顺序.
+                1:综合大数据分析将居家相关的 POI 内容优先返回,即优化返回结果中pois字段的poi 顺序.
+                2:综合大数据分析将公司相关的 POI 内容优先返回,即优化返回结果中pois字段的poi 顺序.
         """
 
         params: dict[str, Any] = {}
 
-        params["location"] = f"{longitude},{latitude}"
+        params["location"] = format_coordinate(location)
 
         if poitype is not None:
             params["poitype"] = poitype

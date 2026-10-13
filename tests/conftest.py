@@ -37,7 +37,7 @@ def api_key() -> str:
     load_dotenv()
     key = os.getenv("API_KEY")
     if not key:
-        raise ValueError("API_KEY Not Found in env variable")
+        pytest.skip("API_KEY is required for integration tests")
     return key
 
 

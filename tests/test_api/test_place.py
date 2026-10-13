@@ -13,13 +13,15 @@ def test_place_arround(amap, sample_coordinate):
     place = Place(amap)
 
     longitude, latitude = sample_coordinate
-    result = place.arround("成都市", longitude=longitude, latitude=latitude)
+    result = place.arround("成都市", location=(longitude, latitude))
     assert result
 
 
 def test_place_polygon(amap, sample_polygon):
     place = Place(amap)
-    result = place.polygon(*sample_polygon)
+    # 闭合多边形:首尾顶点相同
+    ring = [*sample_polygon, sample_polygon[0]]
+    result = place.polygon(*ring)
     assert result
 
 
@@ -47,14 +49,15 @@ async def test_aio_place_text(aio_amap):
 async def test_aio_place_arround(aio_amap, sample_coordinate):
     place = Place(aio_amap)
     longitude, latitude = sample_coordinate
-    result = await place.arround("成都市", longitude=longitude, latitude=latitude)
+    result = await place.arround("成都市", location=(longitude, latitude))
     assert result
 
 
 @pytest.mark.asyncio
 async def test_aio_place_polygon(aio_amap, sample_polygon):
     place = Place(aio_amap)
-    result = await place.polygon(*sample_polygon)
+    ring = [*sample_polygon, sample_polygon[0]]
+    result = await place.polygon(*ring)
     assert result
 
 

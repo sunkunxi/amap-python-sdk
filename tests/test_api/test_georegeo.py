@@ -12,8 +12,7 @@ def test_geo(amap):
 def test_regeo(amap):
     georegeo = Georegeo(amap)
     res = georegeo.regeo(
-        longitude="104.065861",
-        latitude="30.657401",
+        location=("104.065861", "30.657401"),
     )
     assert res
 
@@ -29,7 +28,6 @@ async def test_aio_geo(aio_amap):
 async def test_aio_regeo(aio_amap):
     georegeo = Georegeo(aio_amap)
     res = await georegeo.regeo(
-        longitude="104.065861",
-        latitude="30.657401",
+        location=("104.065861", "30.657401"),
     )
     assert res
