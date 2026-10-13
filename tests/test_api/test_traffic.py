@@ -1,6 +1,6 @@
 import pytest
 
-from pyamap.api.traffic import Traffic
+from amap.api.traffic import Traffic
 
 
 def test_circle_traffic_formats_location_and_options(sync_client):

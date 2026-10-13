@@ -1,8 +1,8 @@
 from collections.abc import Callable
 from typing import Any, Literal
 
-from pyamap import base
-from pyamap.types import Coordinate, T_OutputFormatV5, T_ShowFields, format_coordinates
+from amap import base
+from amap.types import Coordinate, T_OutputFormatV5, T_ShowFields, format_coordinates
 
 
 class Place(base.ApiAgent[base.AmapResultT]):

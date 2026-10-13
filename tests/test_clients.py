@@ -5,16 +5,16 @@ import aiohttp
 import pytest
 import requests
 
-from pyamap import AmapAPIError, AmapTimeoutError, base
-from pyamap.aio import HTTPClient as AsyncHTTPClient
-from pyamap.amap import HTTPClient as SyncHTTPClient
+from amap import AmapAPIError, AmapTimeoutError, base
+from amap.aio import HTTPClient as AsyncHTTPClient
+from amap.amap import HTTPClient as SyncHTTPClient
 
 
 @pytest.mark.parametrize("method", ["get", "put", "delete", "post"])
 def test_sync_http_client_forwards_request_and_injects_key(monkeypatch, method):
     session = Mock()
     session.request.return_value.json.return_value = {"status": "1"}
-    monkeypatch.setattr("pyamap.amap.requests.Session", lambda: session)
+    monkeypatch.setattr("amap.amap.requests.Session", lambda: session)
     client = SyncHTTPClient("secret", "https://example.test")
     params = {"city": "510100", "citylimit": True, "disabled": False}
     headers = {"X-Test": "value"}
@@ -46,10 +46,10 @@ def test_sync_http_client_logs_safe_success_details(caplog, monkeypatch):
     session = Mock()
     session.request.return_value.status_code = 200
     session.request.return_value.json.return_value = {"status": "1"}
-    monkeypatch.setattr("pyamap.amap.requests.Session", lambda: session)
+    monkeypatch.setattr("amap.amap.requests.Session", lambda: session)
     client = SyncHTTPClient("secret-api-key", "https://example.test")
 
-    with caplog.at_level(logging.DEBUG, logger="pyamap.amap"):
+    with caplog.at_level(logging.DEBUG, logger="amap.amap"):
         client.get("/v3/place/text", params={"keywords": "private place"})
 
     assert "Amap request succeeded" in caplog.text
@@ -63,7 +63,7 @@ def test_sync_http_client_logs_safe_success_details(caplog, monkeypatch):
 def test_sync_http_client_close_and_exceptions_propagate(monkeypatch):
     session = Mock()
     session.request.side_effect = RuntimeError("transport failure")
-    monkeypatch.setattr("pyamap.amap.requests.Session", lambda: session)
+    monkeypatch.setattr("amap.amap.requests.Session", lambda: session)
     client = SyncHTTPClient("key", "https://example.test")
 
     with pytest.raises(RuntimeError, match="transport failure"):
@@ -76,10 +76,10 @@ def test_sync_http_client_close_and_exceptions_propagate(monkeypatch):
 def test_sync_http_client_logs_connection_failures_without_exception_text(caplog, monkeypatch):
     session = Mock()
     session.request.side_effect = requests.exceptions.ConnectionError("private url")
-    monkeypatch.setattr("pyamap.amap.requests.Session", lambda: session)
+    monkeypatch.setattr("amap.amap.requests.Session", lambda: session)
     client = SyncHTTPClient("key", "https://example.test")
 
-    with caplog.at_level(logging.WARNING, logger="pyamap.amap"):
+    with caplog.at_level(logging.WARNING, logger="amap.amap"):
         with pytest.raises(requests.exceptions.ConnectionError, match="private url"):
             client.get("/path", params={})
 
@@ -98,10 +98,10 @@ def test_sync_http_client_raises_amap_api_error(caplog, monkeypatch, method):
     }
     session = Mock()
     session.request.return_value = response
-    monkeypatch.setattr("pyamap.amap.requests.Session", lambda: session)
+    monkeypatch.setattr("amap.amap.requests.Session", lambda: session)
     client = SyncHTTPClient("key", "https://example.test")
 
-    with caplog.at_level(logging.WARNING, logger="pyamap.amap"):
+    with caplog.at_level(logging.WARNING, logger="amap.amap"):
         with pytest.raises(AmapAPIError) as exc_info:
             getattr(client, method)("/path", params={})
 
@@ -116,7 +116,7 @@ def test_sync_http_client_raises_amap_api_error(caplog, monkeypatch, method):
 def test_sync_http_client_converts_request_timeouts(monkeypatch, method):
     session = Mock()
     session.request.side_effect = requests.exceptions.Timeout("slow")
-    monkeypatch.setattr("pyamap.amap.requests.Session", lambda: session)
+    monkeypatch.setattr("amap.amap.requests.Session", lambda: session)
     client = SyncHTTPClient("key", "https://example.test")
 
     with pytest.raises(AmapTimeoutError, match="Amap request timed out") as exc_info:
@@ -128,7 +128,7 @@ def test_sync_http_client_converts_request_timeouts(monkeypatch, method):
 @pytest.mark.parametrize("method", ["get", "put", "delete", "post", "close"])
 def test_abstract_http_client_methods_raise_not_implemented(monkeypatch, method):
     session = Mock()
-    monkeypatch.setattr("pyamap.amap.requests.Session", lambda: session)
+    monkeypatch.setattr("amap.amap.requests.Session", lambda: session)
     client = SyncHTTPClient("key", "https://example.test")
 
     with pytest.raises(NotImplementedError):
@@ -141,7 +141,7 @@ def test_abstract_http_client_methods_raise_not_implemented(monkeypatch, method)
 
 def test_abstract_amap_http_property_raises_not_implemented(monkeypatch):
     session = Mock()
-    monkeypatch.setattr("pyamap.amap.requests.Session", lambda: session)
+    monkeypatch.setattr("amap.amap.requests.Session", lambda: session)
     amap = SyncHTTPClient("key", "https://example.test")
 
     with pytest.raises(NotImplementedError):
@@ -155,9 +155,9 @@ async def test_async_http_client_forwards_request_and_normalizes_bools(monkeypat
     response.json = AsyncMock(return_value={"status": "1"})
     session = Mock()
     session.request = Mock(return_value=_awaitable(response))
-    monkeypatch.setattr("pyamap.aio.aiohttp.TCPConnector", lambda limit: ("connector", limit))
+    monkeypatch.setattr("amap.aio.aiohttp.TCPConnector", lambda limit: ("connector", limit))
     monkeypatch.setattr(
-        "pyamap.aio.aiohttp.ClientSession",
+        "amap.aio.aiohttp.ClientSession",
         lambda connector: _session_holder(session, connector),
     )
     client = AsyncHTTPClient("secret", "https://example.test", max_connector=12)
@@ -186,8 +186,8 @@ async def test_async_http_client_forwards_request_and_normalizes_bools(monkeypat
 async def test_async_http_client_propagates_errors_and_closes(monkeypatch):
     session = Mock()
     session.request = Mock(side_effect=_async_error(RuntimeError("transport failure")))
-    monkeypatch.setattr("pyamap.aio.aiohttp.TCPConnector", lambda limit: None)
-    monkeypatch.setattr("pyamap.aio.aiohttp.ClientSession", lambda connector: session)
+    monkeypatch.setattr("amap.aio.aiohttp.TCPConnector", lambda limit: None)
+    monkeypatch.setattr("amap.aio.aiohttp.ClientSession", lambda connector: session)
     client = AsyncHTTPClient("key", "https://example.test", max_connector=1)
 
     with pytest.raises(RuntimeError, match="transport failure"):
@@ -204,11 +204,11 @@ async def test_async_http_client_logs_connection_failures_without_exception_text
 ):
     session = Mock()
     session.request = Mock(side_effect=_async_error(aiohttp.ClientError("private url")))
-    monkeypatch.setattr("pyamap.aio.aiohttp.TCPConnector", lambda limit: None)
-    monkeypatch.setattr("pyamap.aio.aiohttp.ClientSession", lambda connector: session)
+    monkeypatch.setattr("amap.aio.aiohttp.TCPConnector", lambda limit: None)
+    monkeypatch.setattr("amap.aio.aiohttp.ClientSession", lambda connector: session)
     client = AsyncHTTPClient("key", "https://example.test", max_connector=1)
 
-    with caplog.at_level(logging.WARNING, logger="pyamap.aio"):
+    with caplog.at_level(logging.WARNING, logger="amap.aio"):
         with pytest.raises(aiohttp.ClientError, match="private url"):
             await client.get("/path", params={})
 
@@ -229,11 +229,11 @@ async def test_async_http_client_raises_amap_api_error(caplog, monkeypatch):
     )
     session = Mock()
     session.request = Mock(return_value=_awaitable(response))
-    monkeypatch.setattr("pyamap.aio.aiohttp.TCPConnector", lambda limit: None)
-    monkeypatch.setattr("pyamap.aio.aiohttp.ClientSession", lambda connector: session)
+    monkeypatch.setattr("amap.aio.aiohttp.TCPConnector", lambda limit: None)
+    monkeypatch.setattr("amap.aio.aiohttp.ClientSession", lambda connector: session)
     client = AsyncHTTPClient("key", "https://example.test", max_connector=1)
 
-    with caplog.at_level(logging.WARNING, logger="pyamap.aio"):
+    with caplog.at_level(logging.WARNING, logger="amap.aio"):
         with pytest.raises(AmapAPIError) as exc_info:
             await client.get("/path", params={})
 
@@ -247,8 +247,8 @@ async def test_async_http_client_raises_amap_api_error(caplog, monkeypatch):
 async def test_async_http_client_converts_request_timeouts(monkeypatch):
     session = Mock()
     session.request = Mock(side_effect=_async_error(TimeoutError("slow")))
-    monkeypatch.setattr("pyamap.aio.aiohttp.TCPConnector", lambda limit: None)
-    monkeypatch.setattr("pyamap.aio.aiohttp.ClientSession", lambda connector: session)
+    monkeypatch.setattr("amap.aio.aiohttp.TCPConnector", lambda limit: None)
+    monkeypatch.setattr("amap.aio.aiohttp.ClientSession", lambda connector: session)
     client = AsyncHTTPClient("key", "https://example.test", max_connector=1)
 
     with pytest.raises(AmapTimeoutError, match="Amap request timed out") as exc_info:
