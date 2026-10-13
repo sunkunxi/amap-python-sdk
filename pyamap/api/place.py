@@ -94,7 +94,7 @@ class Place(base.ApiAgent[base.AmapResultT]):
 
         return self.amap.http.get(path="/v5/place/text", params=params)
 
-    def arround(
+    def around(
         self,
         keywords: str,
         *,

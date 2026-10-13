@@ -25,7 +25,7 @@ amap = Amap("<API_KEY>")
 
 # POI 2.0 API
 res = amap.place.text("keywords")
-res = amap.place.arround("成都市", location=("116.407082", "39.910464"))
+res = amap.place.around("成都市", location=("116.407082", "39.910464"))
 res = amap.place.polygon(
     ("116.407082", "39.910464"),
     ("117.407082", "40.910464"),
@@ -49,7 +49,7 @@ amap = Amap("<API_KEY>")
 
 # POI 2.0 API
 res = await amap.place.text("keywords")
-res = await amap.place.arround("成都市", location=("116.407082", "39.910464"))
+res = await amap.place.around("成都市", location=("116.407082", "39.910464"))
 res = await amap.place.polygon(
     ("116.407082", "39.910464"),
     ("117.407082", "40.910464"),
