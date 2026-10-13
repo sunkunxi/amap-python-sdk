@@ -102,3 +102,4 @@ exclude = []
 
 [tool.pytest.ini_options]
 addopts = ["--cov=pyamap", "--cov-fail-under=99"]
+markers = ["integration: makes real requests to the Amap Web API"]
