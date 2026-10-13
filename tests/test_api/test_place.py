@@ -1,6 +1,6 @@
 import pytest
 
-from pyamap.api.place import Place
+from amap.api.place import Place
 
 
 def test_text_search_serializes_filters_and_page_options(sync_client):

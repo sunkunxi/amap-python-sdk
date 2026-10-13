@@ -1,24 +1,25 @@
-# pyamap
+# amap-python-sdk
 
-[![Test](https://github.com/sunkunxi/pyamap/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/sunkunxi/pyamap/actions/workflows/test.yml)
-[![Coverage](https://codecov.io/gh/sunkunxi/pyamap/branch/main/graph/badge.svg)](https://codecov.io/gh/sunkunxi/pyamap)
+[![Test](https://github.com/sunkunxi/amap-python-sdk/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/sunkunxi/amap-python-sdk/actions/workflows/test.yml)
+[![Coverage](https://codecov.io/gh/sunkunxi/amap-python-sdk/branch/main/graph/badge.svg)](https://codecov.io/gh/sunkunxi/amap-python-sdk)
+[![PyPI version](https://img.shields.io/pypi/v/amap-python-sdk)](https://pypi.org/project/amap-python-sdk/)
 ![Python versions](https://img.shields.io/badge/python-3.10%2B-blue.svg)
 
 English | [简体中文](./doc/README.zh.md)
 
 ## Overview
 
-pyamap is a Python client for the [Amap (Gaode) Web Service APIs](https://lbs.amap.com/api/webservice/summary). It provides a synchronous client for everyday use and a matching asynchronous client for applications built around asyncio.
+amap is a Python client for the [Amap (Gaode) Web Service APIs](https://lbs.amap.com/api/webservice/summary). It provides a synchronous client for everyday use and a matching asynchronous client for applications built around asyncio.
 
 The SDK currently wraps Place Search, Weather, District, Geocoding, Directions, Distance, Coordinate Conversion, Input Tips, IP Location, and Traffic Status APIs. Check the linked Amap documentation for service availability, required permissions, and current API limits.
 
 ## Installation
 
 ```bash
-pip install pyamap
+pip install amap-python-sdk
 ```
 
-The package supports Python 3.10 and later, and installs its HTTP dependencies (`requests` and `aiohttp`) automatically.
+The PyPI distribution is named `amap-python-sdk`; the Python import package remains `amap`. The package supports Python 3.10 and later, and installs its HTTP dependencies (`requests` and `aiohttp`) automatically.
 
 ## API key
 
@@ -35,7 +36,7 @@ The synchronous client is the recommended starting point. Methods return the par
 ```python
 import os
 
-from pyamap import Amap
+from amap import Amap
 
 amap = Amap(os.environ["AMAP_API_KEY"])
 try:
@@ -84,13 +85,13 @@ Coordinates are provided as `(longitude, latitude)`. The methods accept endpoint
 
 ## Asynchronous usage
 
-`pyamap.aio.Amap` provides the corresponding asyncio client, implemented with aiohttp. Its service methods mirror the synchronous client.
+`amap.aio.Amap` provides the corresponding asyncio client, implemented with aiohttp. Its service methods mirror the synchronous client.
 
 ```python
 import asyncio
 import os
 
-from pyamap.aio import Amap
+from amap.aio import Amap
 
 
 async def main():
@@ -104,10 +105,10 @@ asyncio.run(main())
 
 ## Errors
 
-If Amap returns a JSON response with `"status": "0"`, the client raises `pyamap.exceptions.AmapAPIError`. The exception exposes the original response, `info`, and `infocode`:
+If Amap returns a JSON response with `"status": "0"`, the client raises `amap.exceptions.AmapAPIError`. The exception exposes the original response, `info`, and `infocode`:
 
 ```python
-from pyamap.exceptions import AmapAPIError
+from amap.exceptions import AmapAPIError
 
 try:
     result = amap.place.text("coffee")
@@ -116,11 +117,11 @@ except AmapAPIError as exc:
     print(exc.response)
 ```
 
-The SDK preserves Amap's `infocode` instead of guessing its meaning from a numeric prefix. Check the [official Amap error-code reference](https://lbs.amap.com/api/webservice/guide/tools/info) and the documentation for the specific API. When the underlying HTTP library reports a request timeout, the client raises `pyamap.exceptions.AmpTimeoutError`; other network and HTTP transport errors are raised by `requests` or `aiohttp`.
+The SDK preserves Amap's `infocode` instead of guessing its meaning from a numeric prefix. Check the [official Amap error-code reference](https://lbs.amap.com/api/webservice/guide/tools/info) and the documentation for the specific API. When the underlying HTTP library reports a request timeout, the client raises `amap.exceptions.AmpTimeoutError`; other network and HTTP transport errors are raised by `requests` or `aiohttp`.
 
 ## Logging
 
-pyamap uses Python's standard `logging` module and does not configure handlers or log levels for your application. Successful requests are logged at `DEBUG`; API, HTTP, and timeout failures are logged at `WARNING`. Log messages include the endpoint and diagnostic status, but omit API keys, request parameters, and response bodies.
+amap uses Python's standard `logging` module and does not configure handlers or log levels for your application. Successful requests are logged at `DEBUG`; API, HTTP, and timeout failures are logged at `WARNING`. Log messages include the endpoint and diagnostic status, but omit API keys, request parameters, and response bodies.
 
 Configure logging in your application when needed:
 
@@ -148,6 +149,10 @@ Contributions are welcome:
 4. Open a pull request with a concise description of the change.
 
 Please add or update tests for behavior changes and follow the existing formatting and typing conventions.
+
+## Releases
+
+Publishing a GitHub Release builds and tests the package, then publishes it to PyPI using Trusted Publishing. Configure a PyPI Trusted Publisher for project `amap-python-sdk`, repository owner `sunkunxi`, repository `amap-python-sdk`, workflow filename `publish.yml`, and GitHub environment `pypi`.
 
 ## License
 

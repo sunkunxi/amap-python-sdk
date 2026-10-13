@@ -1,11 +1,12 @@
 [project]
-name = "pyamap"
-version = "0.2.0"
-description = "高德地图Python SDK"
+name = "amap-python-sdk"
+version = "0.1.2"
+description = "A Python SDK for the Amap Web Service APIs"
 authors = [{ name = "KunxiSun", email = "sunkunxi@qq.com" }]
 license = { text = "MIT" }
 readme = "README.md"
 requires-python = ">=3.10,<4.0"
+urls = { Homepage = "https://github.com/sunkunxi/amap-python-sdk", Repository = "https://github.com/sunkunxi/amap-python-sdk" }
 dependencies = [
     "aiohttp (>=3.12.15,<4.0.0)",
     "types-requests (>=2.32.4.20250611,<3.0.0.0)",
@@ -17,7 +18,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = ["pyamap"]
+packages = ["amap"]
 
 
 [dependency-groups]
@@ -93,7 +94,7 @@ keep-runtime-typing = true
 
 [tool.mypy]
 # strict = true
-files = ["pyamap"]
+files = ["amap"]
 exclude = []
 
 # [[tool.mypy.overrides]]
@@ -101,5 +102,5 @@ exclude = []
 # ignore_missing_imports = true
 
 [tool.pytest.ini_options]
-addopts = ["--cov=pyamap", "--cov-fail-under=99"]
+addopts = ["--cov=amap", "--cov-fail-under=99"]
 markers = ["integration: makes real requests to the Amap Web API"]

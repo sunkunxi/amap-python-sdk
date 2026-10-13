@@ -6,8 +6,8 @@
 
 from typing import Any, Literal
 
-from pyamap import base
-from pyamap.types import Coordinate, T_OutputFormat, format_coordinate
+from amap import base
+from amap.types import Coordinate, T_OutputFormat, format_coordinate
 
 T_InputTipsDataType = Literal["all", "poi", "bus", "busline"]
 """返回数据类型:all-所有 poi-POI bus-公交站点 busline-公交线路"""

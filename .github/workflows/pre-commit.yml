@@ -33,7 +33,7 @@ jobs:
         run: uv sync --locked --group lint
       - name: Check formatting and lint
         run: |
-          uv run --no-sync ruff check pyamap tests
-          uv run --no-sync black --check pyamap tests
+          uv run --no-sync ruff check amap tests
+          uv run --no-sync black --check amap tests
       - name: Check types
         run: uv run --no-sync mypy

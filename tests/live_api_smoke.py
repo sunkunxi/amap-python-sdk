@@ -4,8 +4,8 @@ import os
 
 import pytest
 
-from pyamap.aio import Amap as AsyncAmap
-from pyamap.amap import Amap
+from amap.aio import Amap as AsyncAmap
+from amap.amap import Amap
 
 pytestmark = pytest.mark.integration
 

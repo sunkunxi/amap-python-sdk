@@ -1,6 +1,6 @@
 import pytest
 
-from pyamap import AmapAPIError, AmapException, AmapTimeoutError
+from amap import AmapAPIError, AmapException, AmapTimeoutError
 
 
 @pytest.mark.parametrize(
