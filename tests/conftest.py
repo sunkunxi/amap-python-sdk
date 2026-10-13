@@ -1,59 +1,131 @@
-import os
-from decimal import Decimal
+from dataclasses import dataclass
 
 import pytest
-import pytest_asyncio
-from dotenv import load_dotenv
 
-from pyamap import Amap
-from pyamap.aio import Amap as AioAmap
+from pyamap.types import T_Headers, T_Params
 
-
-@pytest.fixture(scope="session")
-def sample_coordinate() -> tuple[Decimal, Decimal]:
-    # Chendu
-    longitude = Decimal("104.07")
-    latitude = Decimal("30.66")
-
-    return longitude, latitude
+MOCK_RESPONSE = {"status": "1", "info": "OK"}
 
 
-@pytest.fixture(scope="session")
-def sample_polygon() -> list[tuple[Decimal, Decimal]]:
-    # Chengdu
-    left_top = Decimal("103.95"), Decimal("30.77")
-    right_bottom = Decimal("104.16"), Decimal("30.60")
-
-    return [left_top, right_bottom]
-
-
-@pytest.fixture(scope="session")
-def sample_ids() -> list[str]:
-    return ["", ""]
+@dataclass
+class Request:
+    method: str
+    path: str
+    params: T_Params
+    data: str | None
+    headers: T_Headers | None
 
 
-@pytest.fixture(scope="session")
-def api_key() -> str:
-    load_dotenv()
-    key = os.getenv("API_KEY")
-    if not key:
-        pytest.skip("API_KEY is required for integration tests")
-    return key
+class RecordingHTTPClient:
+    def __init__(self) -> None:
+        self.requests: list[Request] = []
+
+    def _record(
+        self,
+        method: str,
+        path: str,
+        params: T_Params,
+        data: str | None,
+        headers: T_Headers | None,
+    ) -> dict[str, str]:
+        self.requests.append(Request(method, path, dict(params), data, headers))
+        return dict(MOCK_RESPONSE)
+
+    def get(
+        self,
+        path: str,
+        *,
+        params: T_Params,
+        data: str | None = None,
+        headers: T_Headers | None = None,
+    ) -> dict[str, str]:
+        return self._record("GET", path, params, data, headers)
+
+    def put(
+        self,
+        path: str,
+        *,
+        params: T_Params,
+        data: str | None = None,
+        headers: T_Headers | None = None,
+    ) -> dict[str, str]:
+        return self._record("PUT", path, params, data, headers)
+
+    def delete(
+        self,
+        path: str,
+        *,
+        params: T_Params,
+        data: str | None = None,
+        headers: T_Headers | None = None,
+    ) -> dict[str, str]:
+        return self._record("DELETE", path, params, data, headers)
+
+    def post(
+        self,
+        path: str,
+        *,
+        params: T_Params,
+        data: str | None = None,
+        headers: T_Headers | None = None,
+    ) -> dict[str, str]:
+        return self._record("POST", path, params, data, headers)
 
 
-@pytest.fixture(scope="session")
-def amap(api_key: str):
-    return Amap(api_key)
+class AsyncRecordingHTTPClient(RecordingHTTPClient):
+    async def get(
+        self,
+        path: str,
+        *,
+        params: T_Params,
+        data: str | None = None,
+        headers: T_Headers | None = None,
+    ) -> dict[str, str]:
+        return self._record("GET", path, params, data, headers)
+
+    async def put(
+        self,
+        path: str,
+        *,
+        params: T_Params,
+        data: str | None = None,
+        headers: T_Headers | None = None,
+    ) -> dict[str, str]:
+        return self._record("PUT", path, params, data, headers)
+
+    async def delete(
+        self,
+        path: str,
+        *,
+        params: T_Params,
+        data: str | None = None,
+        headers: T_Headers | None = None,
+    ) -> dict[str, str]:
+        return self._record("DELETE", path, params, data, headers)
+
+    async def post(
+        self,
+        path: str,
+        *,
+        params: T_Params,
+        data: str | None = None,
+        headers: T_Headers | None = None,
+    ) -> dict[str, str]:
+        return self._record("POST", path, params, data, headers)
 
 
-@pytest_asyncio.fixture(scope="function")
-async def aio_amap(api_key: str):
-    """try async with initialize"""
-    async with AioAmap(api_key=api_key) as aio_amap:
-        yield aio_amap
+class FakeAmap:
+    def __init__(self, http: RecordingHTTPClient | AsyncRecordingHTTPClient) -> None:
+        self.http = http
 
 
-@pytest_asyncio.fixture(scope="function")
-async def aio_amap2(api_key: str):
-    """try await initialize"""
-    return await AioAmap(api_key=api_key)
+@pytest.fixture
+def sync_client() -> tuple[FakeAmap, RecordingHTTPClient]:
+    http = RecordingHTTPClient()
+    return FakeAmap(http), http
+
+
+@pytest.fixture
+def async_client() -> tuple[FakeAmap, AsyncRecordingHTTPClient]:
+    http = AsyncRecordingHTTPClient()
+    return FakeAmap(http), http

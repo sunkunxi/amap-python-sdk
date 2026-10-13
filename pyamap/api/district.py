@@ -61,7 +61,7 @@ class District(base.ApiAgent[base.AmapResultT]):
             params["extensions"] = extensions
 
         if adcode is not None:
-            params["adcode"] = extensions
+            params["adcode"] = adcode
 
         if output is not None:
             params["output"] = output.upper()

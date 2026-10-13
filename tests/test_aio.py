@@ -1,34 +1,50 @@
+import asyncio
+from unittest.mock import Mock
+
 import pytest
 
-from pyamap.aio import HTTPClient
-from pyamap.api.district import District
-from pyamap.api.georegeo import Georegeo
-from pyamap.api.place import Place
-from pyamap.api.weather import Weather
+from pyamap.aio import Amap
 
 
-@pytest.mark.asyncio
-async def test_amap_init(aio_amap):
-    assert aio_amap
+def test_async_amap_requires_initialization_and_can_be_awaited(monkeypatch):
+    http = Mock()
+    factory = Mock(return_value=http)
+    monkeypatch.setattr("pyamap.aio.HTTPClient", factory)
+    amap = Amap("key", max_connector=7)
+
+    with pytest.raises(RuntimeError, match="not initialized"):
+        _ = amap.http
+
+    async def initialize():
+        return await amap
+
+    assert asyncio.run(initialize()) is amap
+    assert amap.http is http
+    factory.assert_called_once_with(
+        "key",
+        "https://restapi.amap.com",
+        max_connector=7,
+    )
 
 
-@pytest.mark.asyncio
-async def test_amap_http_client(aio_amap):
-    assert aio_amap.http and isinstance(aio_amap.http, HTTPClient)
+def test_async_context_closes_client_even_when_body_raises(monkeypatch):
+    http = Mock()
+    http.close = Mock(return_value=_awaitable(None))
+    monkeypatch.setattr("pyamap.aio.HTTPClient", lambda *args, **kwargs: http)
+    amap = Amap("key")
+
+    async def raise_inside_context():
+        async with amap:
+            raise RuntimeError("body failure")
+
+    with pytest.raises(RuntimeError, match="body failure"):
+        asyncio.run(raise_inside_context())
+
+    http.close.assert_called_once_with()
 
 
-@pytest.mark.asyncio
-async def test_amap_api_agent(aio_amap):
-    assert aio_amap.http is not None and isinstance(aio_amap.http, HTTPClient)
-    assert aio_amap.place and isinstance(aio_amap.place, Place)
-    assert aio_amap.weather and isinstance(aio_amap.weather, Weather)
-    assert aio_amap.district and isinstance(aio_amap.district, District)
+def _awaitable(value):
+    async def resolve():
+        return value
 
-
-@pytest.mark.asyncio
-async def test_amap_api_agent_initiailize(aio_amap2):
-    assert aio_amap2.http is not None and isinstance(aio_amap2.http, HTTPClient)
-    assert aio_amap2.place and isinstance(aio_amap2.place, Place)
-    assert aio_amap2.weather and isinstance(aio_amap2.weather, Weather)
-    assert aio_amap2.district and isinstance(aio_amap2.district, District)
-    assert aio_amap2.georegeo and isinstance(aio_amap2.georegeo, Georegeo)
+    return resolve()

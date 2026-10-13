@@ -27,6 +27,6 @@ class Weather(base.ApiAgent[base.AmapResultT]):
 
         if output is not None:
             # NOTE: it is uppercase "JSON" or "XML" in official doc
-            params["extensions"] = output.upper()
+            params["output"] = output.upper()
 
         return self.amap.http.get("/v3/weather/weatherInfo", params=params)

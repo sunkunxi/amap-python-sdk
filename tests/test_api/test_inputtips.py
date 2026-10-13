@@ -3,27 +3,60 @@ import pytest
 from pyamap.api.inputtips import InputTips
 
 
-def test_inputtips_query(amap):
-    inputtips = InputTips(amap)
-    res = inputtips.query("成都市")
-    assert res
+def test_query_uses_keyword_and_default_values(sync_client):
+    amap, http = sync_client
+
+    InputTips(amap).query("咖啡")
+
+    assert http.requests[0].path == "/v3/assistant/inputtips"
+    assert http.requests[0].params == {
+        "keywords": "咖啡",
+        "datatype": "all",
+        "output": "JSON",
+    }
 
 
-def test_inputtips_with_city(amap):
-    inputtips = InputTips(amap)
-    res = inputtips.query("天府广场", city="成都")
-    assert res
+def test_query_serializes_all_optional_fields(sync_client):
+    amap, http = sync_client
+
+    InputTips(amap).query(
+        "咖啡",
+        types="050000|060000",
+        location=("104.07", "30.66"),
+        city="510100",
+        citylimit=True,
+        datatype="poi",
+        sig="signature",
+        output="xml",
+    )
+
+    assert http.requests[0].params == {
+        "keywords": "咖啡",
+        "datatype": "poi",
+        "output": "XML",
+        "types": "050000|060000",
+        "location": "104.07,30.66",
+        "city": "510100",
+        "citylimit": "true",
+        "sig": "signature",
+    }
 
 
-def test_inputtips_with_location(amap, sample_coordinate):
-    inputtips = InputTips(amap)
-    longitude, latitude = sample_coordinate
-    res = inputtips.query("咖啡", location=(longitude, latitude))
-    assert res
+def test_query_accepts_string_citylimit_and_omits_none_fields(sync_client):
+    amap, http = sync_client
+
+    InputTips(amap).query("成都", citylimit="false")
+
+    assert http.requests[0].params["citylimit"] == "false"
+    assert "city" not in http.requests[0].params
+    assert "location" not in http.requests[0].params
 
 
 @pytest.mark.asyncio
-async def test_aio_inputtips_query(aio_amap):
-    inputtips = InputTips(aio_amap)
-    res = await inputtips.query("成都市")
-    assert res
+async def test_query_supports_async_http_client(async_client):
+    amap, http = async_client
+
+    result = await InputTips(amap).query("成都")
+
+    assert result["status"] == "1"
+    assert http.requests[0].path == "/v3/assistant/inputtips"

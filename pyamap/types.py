@@ -36,6 +36,9 @@ def _validate_one(value: str | Decimal, name: str) -> str:
         except (InvalidOperation, ValueError) as exc:
             raise ValueError(f"{name} 不是有效数字: {value!r}") from exc
 
+    if not d.is_finite():
+        raise ValueError(f"{name} 必须是有限数字: {value!r}")
+
     # Decimal('104.1234567').as_tuple() -> exponent=-7
     # Decimal('104.000000').as_tuple()  -> exponent=0(尾零被规范化掉了)
     # Decimal('104.070000').as_tuple() -> exponent=-6(刚好 6 位)

@@ -31,7 +31,6 @@ test = [
     "pytest>=8.3.5",
     "pytest-cov>=6.1.1",
     "pytest-asyncio>=0.26.0",
-    "dotenv>=0.9.9",
 ]
 
 # ---------------------------------------------------------------- #
@@ -100,3 +99,6 @@ exclude = []
 # [[tool.mypy.overrides]]
 # module = []
 # ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+addopts = ["--cov=pyamap", "--cov-fail-under=99"]
