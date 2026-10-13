@@ -7,8 +7,8 @@
 from collections.abc import Sequence
 from typing import Any, Literal
 
-from pyamap import base
-from pyamap.types import Coordinate, T_OutputFormat, format_coordinate, format_coordinates
+from amap import base
+from amap.types import Coordinate, T_OutputFormat, format_coordinate, format_coordinates
 
 T_DistanceType = Literal[0, 1, 2, 3]
 """距离测量类型:

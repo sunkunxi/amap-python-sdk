@@ -1,11 +1,11 @@
 from unittest.mock import Mock
 
-from pyamap.amap import Amap as SyncAmap
+from amap.amap import Amap as SyncAmap
 
 
 def test_sync_amap_initializes_all_agents_and_closes_session(monkeypatch):
     session = Mock()
-    monkeypatch.setattr("pyamap.amap.requests.Session", lambda: session)
+    monkeypatch.setattr("amap.amap.requests.Session", lambda: session)
 
     amap = SyncAmap("key")
 

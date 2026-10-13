@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 import pytest
 
-from pyamap.types import T_Headers, T_Params
+from amap.types import T_Headers, T_Params
 
 MOCK_RESPONSE = {"status": "1", "info": "OK"}
 

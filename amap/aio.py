@@ -6,18 +6,18 @@ from collections.abc import Awaitable
 import aiohttp
 from typing_extensions import Self
 
-from pyamap import base
-from pyamap.api.coordinate import Coordinate
-from pyamap.api.direction import Direction
-from pyamap.api.distance import Distance
-from pyamap.api.district import District
-from pyamap.api.georegeo import Georegeo
-from pyamap.api.inputtips import InputTips
-from pyamap.api.ip import Ip
-from pyamap.api.place import Place
-from pyamap.api.traffic import Traffic
-from pyamap.api.weather import Weather
-from pyamap.exceptions import AmapAPIError, AmapTimeoutError
+from amap import base
+from amap.api.coordinate import Coordinate
+from amap.api.direction import Direction
+from amap.api.distance import Distance
+from amap.api.district import District
+from amap.api.georegeo import Georegeo
+from amap.api.inputtips import InputTips
+from amap.api.ip import Ip
+from amap.api.place import Place
+from amap.api.traffic import Traffic
+from amap.api.weather import Weather
+from amap.exceptions import AmapAPIError, AmapTimeoutError
 
 from .types import RequestMethods, T_Headers, T_Params
 

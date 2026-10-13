@@ -6,8 +6,8 @@ IP 定位
 
 from typing import Any
 
-from pyamap import base
-from pyamap.types import T_OutputFormat
+from amap import base
+from amap.types import T_OutputFormat
 
 
 class Ip(base.ApiAgent[base.AmapResultT]):

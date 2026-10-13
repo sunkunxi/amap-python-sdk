@@ -8,8 +8,8 @@
 
 from typing import Any, Literal
 
-from pyamap import base
-from pyamap.types import Coordinate, Rectangle, T_OutputFormat, format_coordinate
+from amap import base
+from amap.types import Coordinate, Rectangle, T_OutputFormat, format_coordinate
 
 T_TrafficRoadLevel = Literal[1, 2, 3, 4, 5, 6]
 """道路等级(包含关系):

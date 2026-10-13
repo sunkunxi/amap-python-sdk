@@ -1,6 +1,6 @@
 import pytest
 
-from pyamap.api.distance import Distance
+from amap.api.distance import Distance
 
 
 def test_measure_serializes_origins_destination_and_defaults(sync_client):
