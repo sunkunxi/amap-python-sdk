@@ -7,9 +7,9 @@
 
 ## 项目简介
 
-amap 是一个用于调用[高德地图 Web 服务 API](https://lbs.amap.com/api/webservice/summary)的 Python 客户端。提供适合常规使用的同步客户端，以及面向 asyncio 应用的异步客户端。
+这个仓库是一个用于调用[高德地图 Web 服务 API](https://lbs.amap.com/api/webservice/summary)的 Python 客户端。提供同步客户端，以及面向 asyncio 应用的异步客户端。
 
-目前封装了 POI 检索、天气、行政区划、地理编码、路径规划、距离测量、坐标转换、输入提示、IP 定位和交通态势等 API。服务可用性、权限要求和调用限制请以高德官方文档为准。
+详见下面“封装的 API”部分以了解本 SDK 封装的服务。
 
 ## 安装
 
@@ -21,11 +21,7 @@ PyPI 分发包名称为 `amap-python-sdk`，Python 导入包名仍为 `amap`。�
 
 ## API Key
 
-请在[高德开放平台控制台](https://console.amap.com/dev/key/app)创建 Web 服务 API Key。不要将密钥提交到代码仓库。可以通过环境变量提供密钥：
-
-```bash
-export AMAP_API_KEY="你的 API Key"
-```
+请在[高德开放平台控制台](https://console.amap.com/dev/key/app)创建 Web 服务 API Key。
 
 ## 同步用法
 
@@ -101,6 +97,25 @@ async def main():
 asyncio.run(main())
 ```
 
+## 封装的 API
+
+本 SDK 封装了以下高德地图 Web API：
+
+| API                     | 描述                                    | 客户端模块      |
+| ----------------------- | --------------------------------------- | --------------- |
+| POI 检索 (Place Search) | 关键字检索、周边、多边形检索和 POI 详情 | amap.place      |
+| 天气                    | 当前天气与预报查询                      | amap.weather    |
+| 行政区划                | 行政区查询与列举                        | amap.district   |
+| 地理编码                | 正向地理编码与逆地理编码                | amap.georegeo   |
+| 路径规划                | 驾车/步行等路线规划                     | amap.direction  |
+| 距离测量                | 距离计算与距离矩阵查询                  | amap.distance   |
+| 坐标转换                | 不同坐标系之间的转换                    | amap.coordinate |
+| 输入提示                | 输入补全 / 联想提示                     | amap.inputtips  |
+| IP 定位                 | 基于 IP 的位置查询                      | amap.ip         |
+| 交通态势                | 交通状况与事件查询                      | amap.traffic    |
+
+服务可用性、权限要求和调用限制请以高德官方文档为准。
+
 ## 错误处理
 
 当高德返回 JSON 响应且 `"status": "0"` 时，客户端会抛出 `amap.exceptions.AmapAPIError`。异常对象提供原始响应、`info` 和 `infocode`：
@@ -116,18 +131,6 @@ except AmapAPIError as exc:
 ```
 
 SDK 会保留高德返回的 `infocode`，不会根据错误码数字前缀猜测具体含义。请查阅[高德官方错误码说明](https://lbs.amap.com/api/webservice/guide/tools/info)及对应 API 文档。底层 HTTP 客户端报告请求超时时，SDK 会抛出 `amap.exceptions.AmpTimeoutError`；其他网络和 HTTP 传输异常仍由 `requests` 或 `aiohttp` 抛出。
-
-## 日志
-
-amap 使用 Python 标准库 `logging`，不会替应用配置 handler 或日志级别。成功请求以 `DEBUG` 级别记录；API、HTTP 和超时错误以 `WARNING` 级别记录。日志会包含端点和必要的诊断状态，但不会记录 API Key、请求参数或响应正文。
-
-需要查看请求成功记录时，可在应用中自行配置日志：
-
-```python
-import logging
-
-logging.basicConfig(level=logging.DEBUG)
-```
 
 ## 运行环境
 
@@ -147,10 +150,6 @@ logging.basicConfig(level=logging.DEBUG)
 4. 提交 Pull Request，并简要说明改动内容。
 
 行为变更请同时补充或更新测试，并遵循项目现有的格式和类型标注规范。
-
-## 发布
-
-发布 GitHub Release 后，GitHub Actions 会运行测试、构建分发包并通过 Trusted Publishing 上传到 PyPI。需要在 PyPI 项目 `amap-python-sdk` 配置 Trusted Publisher：仓库所有者 `sunkunxi`、仓库名 `amap-python-sdk`、工作流文件名 `publish.yml`、GitHub environment `pypi`。
 
 ## 许可证
 

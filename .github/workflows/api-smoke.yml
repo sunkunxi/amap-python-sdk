@@ -3,7 +3,7 @@ name: Amap API smoke tests
 on:
   workflow_dispatch:
   release:
-    types: [prereleased]
+    types: [prereleased, published]
 
 permissions:
   contents: read
