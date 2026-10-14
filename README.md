@@ -9,9 +9,9 @@ English | [简体中文](./doc/README.zh.md)
 
 ## Overview
 
-amap is a Python client for the [Amap (Gaode) Web Service APIs](https://lbs.amap.com/api/webservice/summary). It provides a synchronous client for everyday use and a matching asynchronous client for applications built around asyncio.
+This repository is a Python client for the [Amap (Gaode) Web Service APIs](https://lbs.amap.com/api/webservice/summary). It provides a synchronous client and a matching asynchronous client for applications built around asyncio.
 
-The SDK currently wraps Place Search, Weather, District, Geocoding, Directions, Distance, Coordinate Conversion, Input Tips, IP Location, and Traffic Status APIs. Check the linked Amap documentation for service availability, required permissions, and current API limits.
+See the "Available APIs" section below for a table of the Web APIs wrapped by this SDK.
 
 ## Installation
 
@@ -23,11 +23,7 @@ The PyPI distribution is named `amap-python-sdk`; the Python import package rema
 
 ## API key
 
-Create a Web Service API key in the [Amap developer console](https://console.amap.com/dev/key/app). Keep it out of source control. For example, set an environment variable before running your application:
-
-```bash
-export AMAP_API_KEY="your-api-key"
-```
+Create a Web Service API key in the [Amap developer console](https://console.amap.com/dev/key/app).
 
 ## Synchronous usage
 
@@ -103,6 +99,25 @@ async def main():
 asyncio.run(main())
 ```
 
+## Available APIs
+
+The SDK wraps the following Amap Web APIs:
+
+| API                   | Description                                                          | Client module   |
+| --------------------- | -------------------------------------------------------------------- | --------------- |
+| Place Search (POI)    | Keyword, nearby, polygon, and detail searches for points of interest | amap.place      |
+| Weather               | Current weather and forecasts                                        | amap.weather    |
+| District              | Administrative district lookup and listing                           | amap.district   |
+| Geocoding             | Forward and reverse geocoding                                        | amap.georegeo   |
+| Directions            | Route planning (driving, walking, etc.)                              | amap.direction  |
+| Distance              | Distance measurement and matrix queries                              | amap.distance   |
+| Coordinate Conversion | Convert between coordinate systems                                   | amap.coordinate |
+| Input Tips            | Autocomplete / input suggestion service                              | amap.inputtips  |
+| IP Location           | IP-based location lookup                                             | amap.ip         |
+| Traffic Status        | Traffic condition and incident queries                               | amap.traffic    |
+
+Service availability, required permissions, and API limits should be checked in the official Amap documentation.
+
 ## Errors
 
 If Amap returns a JSON response with `"status": "0"`, the client raises `amap.exceptions.AmapAPIError`. The exception exposes the original response, `info`, and `infocode`:
@@ -119,18 +134,6 @@ except AmapAPIError as exc:
 
 The SDK preserves Amap's `infocode` instead of guessing its meaning from a numeric prefix. Check the [official Amap error-code reference](https://lbs.amap.com/api/webservice/guide/tools/info) and the documentation for the specific API. When the underlying HTTP library reports a request timeout, the client raises `amap.exceptions.AmpTimeoutError`; other network and HTTP transport errors are raised by `requests` or `aiohttp`.
 
-## Logging
-
-amap uses Python's standard `logging` module and does not configure handlers or log levels for your application. Successful requests are logged at `DEBUG`; API, HTTP, and timeout failures are logged at `WARNING`. Log messages include the endpoint and diagnostic status, but omit API keys, request parameters, and response bodies.
-
-Configure logging in your application when needed:
-
-```python
-import logging
-
-logging.basicConfig(level=logging.DEBUG)
-```
-
 ## Requirements
 
 - Python `>=3.10,<4.0`
@@ -141,18 +144,13 @@ Exact dependency constraints are maintained in [pyproject.toml](pyproject.toml).
 
 ## Contributing
 
-Contributions are welcome:
+Contributions are welcome. If submitting changes, please include unit tests for any behavior changes or new features.
 
-1. Fork the repository and create a branch for your change.
-2. Install the project and development groups with `uv sync --all-groups`.
-3. Run the relevant tests with `uv run pytest`.
-4. Open a pull request with a concise description of the change.
+Run the test suite with:
 
-Please add or update tests for behavior changes and follow the existing formatting and typing conventions.
-
-## Releases
-
-Publishing a GitHub Release builds and tests the package, then publishes it to PyPI using Trusted Publishing. Configure a PyPI Trusted Publisher for project `amap-python-sdk`, repository owner `sunkunxi`, repository `amap-python-sdk`, workflow filename `publish.yml`, and GitHub environment `pypi`.
+```bash
+uv run pytest
+```
 
 ## License
 
