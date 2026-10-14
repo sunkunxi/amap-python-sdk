@@ -19,7 +19,7 @@ jobs:
           version: "0.13.0"
           python-version: "3.10"
           enable-cache: true
-      - run: uv sync --locked --group test
+      - run: uv sync --locked --group dev
       - run: uv run pytest --no-cov -q tests/live_api_smoke.py
         env:
           AMAP_API_KEY: ${{ secrets.AMAP_API_KEY }}
