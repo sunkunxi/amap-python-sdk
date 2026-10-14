@@ -1,7 +1,7 @@
-# amap-python-sdk
+# pyamap
 
-[![Test](https://github.com/sunkunxi/amap-python-sdk/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/sunkunxi/amap-python-sdk/actions/workflows/test.yml)
-[![Coverage](https://codecov.io/gh/sunkunxi/amap-python-sdk/branch/main/graph/badge.svg)](https://codecov.io/gh/sunkunxi/amap-python-sdk)
+[![Test](https://github.com/sunkunxi/pyamap/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/sunkunxi/pyamap/actions/workflows/test.yml)
+[![Coverage](https://codecov.io/gh/sunkunxi/pyamap/branch/main/graph/badge.svg)](https://codecov.io/gh/sunkunxi/pyamap)
 
 [English](../README.md) | 简体中文
 
@@ -14,10 +14,8 @@
 ## 安装
 
 ```bash
-pip install amap-python-sdk
+pip install pyamap
 ```
-
-PyPI 分发包名称为 `amap-python-sdk`，Python 导入包名仍为 `amap`。支持 Python 3.10 及以上版本，安装时会一并安装 HTTP 客户端依赖 `requests` 和 `aiohttp`。
 
 ## API Key
 
@@ -130,7 +128,7 @@ except AmapAPIError as exc:
     print(exc.response)
 ```
 
-SDK 会保留高德返回的 `infocode`，不会根据错误码数字前缀猜测具体含义。请查阅[高德官方错误码说明](https://lbs.amap.com/api/webservice/guide/tools/info)及对应 API 文档。底层 HTTP 客户端报告请求超时时，SDK 会抛出 `amap.exceptions.AmpTimeoutError`；其他网络和 HTTP 传输异常仍由 `requests` 或 `aiohttp` 抛出。
+SDK 会保留高德返回的 `infocode`，不会根据错误码数字前缀猜测具体含义。请查阅[高德官方错误码说明](https://lbs.amap.com/api/webservice/guide/tools/info)及对应 API 文档。底层 HTTP 客户端报告请求超时时，SDK 会抛出 `amap.exceptions.AmapTimeoutError`；其他网络和 HTTP 传输异常仍由 `requests` 或 `aiohttp` 抛出。
 
 ## 运行环境
 
