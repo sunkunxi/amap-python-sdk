@@ -1,9 +1,9 @@
-# amap-python-sdk
+# pyamap
 
-[![Test](https://github.com/sunkunxi/amap-python-sdk/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/sunkunxi/amap-python-sdk/actions/workflows/test.yml)
-[![Coverage](https://codecov.io/gh/sunkunxi/amap-python-sdk/branch/main/graph/badge.svg)](https://codecov.io/gh/sunkunxi/amap-python-sdk)
-[![PyPI version](https://img.shields.io/pypi/v/amap-python-sdk?color=%2334D058&label=pypi%20package)](https://pypi.org/project/amap-python-sdk/)
-![Python versions](https://img.shields.io/pypi/pyversions/amap-python-sdk.svg?color=%2334D058)
+[![Test](https://github.com/sunkunxi/pyamap/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/sunkunxi/pyamap/actions/workflows/test.yml)
+[![Coverage](https://codecov.io/gh/sunkunxi/pyamap/branch/main/graph/badge.svg)](https://codecov.io/gh/sunkunxi/pyamap)
+[![PyPI version](https://img.shields.io/pypi/v/pyamap?color=%2334D058&label=pypi%20package)](https://pypi.org/project/pyamap/)
+![Python versions](https://img.shields.io/pypi/pyversions/pyamap.svg?color=%2334D058)
 
 English | [简体中文](./doc/README.zh.md)
 
@@ -16,10 +16,9 @@ See the "Available APIs" section below for a table of the Web APIs wrapped by th
 ## Installation
 
 ```bash
-pip install amap-python-sdk
+pip install pyamap
 ```
 
-The PyPI distribution is named `amap-python-sdk`; the Python import package remains `amap`. The package supports Python 3.10 and later, and installs its HTTP dependencies (`requests` and `aiohttp`) automatically.
 
 ## API key
 
