@@ -66,7 +66,7 @@ jobs:
           echo "branch=${branch}" >> "$GITHUB_OUTPUT"
       - name: Validate release
         run: |
-          uv sync --locked --group dev --group lint
+          uv sync --locked --group dev --group dev
           uv run --no-sync pytest
           uv run --no-sync ruff check amap tests
           uv run --no-sync black --check amap tests
