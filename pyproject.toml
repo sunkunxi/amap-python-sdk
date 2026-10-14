@@ -1,6 +1,6 @@
 [project]
-name = "amap-python-sdk"
-version = "0.1.5"
+name = "pyamap"
+version = "1.0.2"
 description = "A Python SDK for the Amap Web Service APIs"
 authors = [{ name = "KunxiSun", email = "sunkunxi@qq.com" }]
 license = { text = "MIT" }
@@ -16,7 +16,7 @@ classifiers = [
     "Programming Language :: Python :: 3.14",
     "Programming Language :: Python :: 3.15",
 ]
-urls = { Homepage = "https://github.com/sunkunxi/amap-python-sdk", Repository = "https://github.com/sunkunxi/amap-python-sdk" }
+urls = { Homepage = "https://github.com/sunkunxi/pyamap", Repository = "https://github.com/sunkunxi/pyamap" }
 dependencies = [
     "aiohttp (>=3.12.15,<4.0.0)",
     "types-requests (>=2.32.4.20250611,<3.0.0.0)",
@@ -38,11 +38,7 @@ lint = [
     "mypy>=1.15",
     "ruff>=0.14.14,<0.17.0",
 ]
-test = [
-    "pytest>=8.3.5",
-    "pytest-cov>=6.1.1",
-    "pytest-asyncio>=0.26.0",
-]
+test = ["pytest>=8.3.5", "pytest-cov>=6.1.1", "pytest-asyncio>=0.26.0"]
 
 # ---------------------------------------------------------------- #
 # 工具配置
