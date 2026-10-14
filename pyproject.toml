@@ -1,6 +1,6 @@
 [project]
 name = "amap-python-sdk"
-version = "1.0.2"
+version = "2.0.0"
 description = "A Python SDK for the Amap Web Service APIs"
 authors = [{ name = "KunxiSun", email = "sunkunxi@qq.com" }]
 license = { text = "MIT" }
