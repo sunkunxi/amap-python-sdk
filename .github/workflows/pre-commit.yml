@@ -30,7 +30,7 @@ jobs:
             pyproject.toml
             uv.lock
       - name: Install lint dependencies
-        run: uv sync --locked --group lint
+        run: uv sync --locked --group dev
       - name: Check formatting and lint
         run: |
           uv run --no-sync ruff check amap tests

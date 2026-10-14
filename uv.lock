@@ -219,17 +219,15 @@ dependencies = [
 ]
 
 [package.dev-dependencies]
-lint = [
+dev = [
     { name = "black" },
     { name = "mypy" },
     { name = "pre-commit", version = "4.6.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "pre-commit", version = "4.7.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
-    { name = "ruff" },
-]
-test = [
     { name = "pytest" },
     { name = "pytest-asyncio" },
     { name = "pytest-cov" },
+    { name = "ruff" },
 ]
 
 [package.metadata]
@@ -240,16 +238,14 @@ requires-dist = [
 ]
 
 [package.metadata.requires-dev]
-lint = [
+dev = [
     { name = "black", specifier = ">=25.1.0" },
     { name = "mypy", specifier = ">=1.15" },
     { name = "pre-commit", specifier = ">=4.2.0" },
-    { name = "ruff", specifier = ">=0.14.14,<0.17.0" },
-]
-test = [
     { name = "pytest", specifier = ">=8.3.5" },
     { name = "pytest-asyncio", specifier = ">=0.26.0" },
     { name = "pytest-cov", specifier = ">=6.1.1" },
+    { name = "ruff", specifier = ">=0.14.14,<0.17.0" },
 ]
 
 [[package]]
